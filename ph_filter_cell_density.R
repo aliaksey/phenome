@@ -6,7 +6,8 @@ rm(list=c("cell.ftrs","image.data"))
 cell.dns.f<-c()
 for(i in unique(cell.density[,"FeatureIdx"])){
   temp2<-cell.density[cell.density$FeatureIdx==i,]
-  tempcn<-unique(temp2[,c("ImageNumber","Image_Count_Cells")])
+  tempcn.temp<-unique(temp2[,c("ImageNumber","Image_Count_Cells")])
+  tempcn<-tempcn.temp[tempcn.temp$Image_Count_Cells!=0,]
   lbnd<-as.numeric(quantile(tempcn[,"Image_Count_Cells"], probs = 0.25))
   ubnd<-as.numeric(quantile(tempcn[,"Image_Count_Cells"], probs = 0.75))
   iud<-ubnd-lbnd
