@@ -12,7 +12,8 @@ for(i in unique(cell.density[,"FeatureIdx"])){
   ubnd<-as.numeric(quantile(tempcn[,"Image_Count_Cells"], probs = 0.75))
   iud<-ubnd-lbnd
   rsltc<-temp2[temp2[,"Image_Count_Cells"]<(ubnd+1.5*iud)&
-                 temp2[,"Image_Count_Cells"]>(lbnd-1.5*iud),]
+                 temp2[,"Image_Count_Cells"]>(lbnd-1.5*iud)&
+                 temp2[,"Image_Count_Cells"]!=0,]
   cell.dns.f<-rbind(cell.dns.f,rsltc) 
 }
 save(cell.dns.f,file="Cell_dens_corr.RData")
