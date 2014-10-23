@@ -1,3 +1,4 @@
+rm(list=ls())
 library(chemometrics)
 library(caret)
 
@@ -9,7 +10,8 @@ all.names.temp<-names(cell.ftrs)
 all.names.cell.t<-all.names.temp[grep("Cells_AreaShape", all.names.temp) ]
 # removing numbers and location features
 shape.col.names<-all.names.cell.t[!grepl("Center", all.names.cell.t)&
-                                   !grepl("Neighbors", all.names.cell.t)]
+                                   !grepl("Neighbors", all.names.cell.t)&
+                                    !grepl("Zernike", all.names.cell.t)]
 cell.shape.temp<-cell.ftrs[,c("ImageNumber",  "FeatureIdx",shape.col.names)]
 #applying previous filters
 cell.shape<-cell.shape.temp[cell.shape.temp$ImageNumber%in%cell.area.f$ImageNumber&
@@ -42,7 +44,8 @@ for(i in unique(cell.shape[,"FeatureIdx"])){
   temp2<-cell.shape[cell.shape$FeatureIdx==i,]
   mdres<-Moutlier(temp2[,notcorrelatfeatures], quantile = 0.99, plot = F)
   rsltmd<-temp2[mdres$rd < mdres$cutoff,]
-  mordisf<-rbind(cell.shape.f,rsltmd)
+  cell.shape.f<-rbind(cell.shape.f,rsltmd)
   }
+cell.shape.f<-na.omit(cell.shape.f)
 save(cell.shape.f,file="Cell_shape_corr.RData")
 
