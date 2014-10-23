@@ -1,9 +1,9 @@
 ##loading data
 load("ph_raw_data.RData")
 load("Cell_dens_corr.RData")
-#filtering images based on area and perimeter
-cell.area.temp<-cell.ftrs[,c("ImageNumber",  "FeatureIdx","Cells_AreaShape_Area", 
+cell.area.temp<-cell.ftrs[,c("ImageNumber","ObjectNumber", "FeatureIdx","Cells_AreaShape_Area", 
                         "Cells_AreaShape_Perimeter" )]
+#filtering images based cell density
 cell.area<-cell.area.temp[cell.area.temp$ImageNumber%in%cell.dns.f$ImageNumber,]
 rm(list=c("cell.ftrs","image.data","cell.dns.f"))
 cell.area.f<-c()
