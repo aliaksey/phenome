@@ -53,7 +53,7 @@ for(i in unique(cell.ftrs.f.scaled[,"FeatureIdx"])){
   corfeat[corfeat<0]<-0
   diag(corfeat)<-NA
   #find highly correlated
-  highlyCor <- findCorrelation3(corfeat, 0.5)
+  highlyCor <- findCorrelation(corfeat, 0.5)
   highlyCor.data <- cordata[highlyCor,]
   #small chekoings
   corfeat[highlyCor,highlyCor]
@@ -72,12 +72,15 @@ for(i in unique(cell.ftrs.f.scaled[,"FeatureIdx"])){
   repnumber<-length(cordata[,1])
   cellnumber.left<-length(xperfeat[xperfeat$ImageNumber%in%rownames(highlyCor.data),1])
   cellnumber<-length(xperfeat[,1])
-  
-  statperfeat.temp<-cbind(i,repnumber,repnumber.left,
-                          ratio.left,avecor,cellnumber,cellnumber.left)
+  statperfeat.temp<-cbind(FeatureIdx=i,RepNumber=repnumber,RepNumber.left=repnumber.left,
+                      Ratio.left=ratio.left,Average.correl=avecor,CellNumber=cellnumber,
+                      CellNumber.left=cellnumber.left)
   statperfeat<-rbind(statperfeat,statperfeat.temp)
   highlyCor.data.result<-cbind(FeatureIdx=i,ImageNumber=as.numeric(row.names(highlyCor.data)))
   cell.ftrs.reprod<-rbind(cell.ftrs.reprod,highlyCor.data.result)
 }
 #saving resuls
+statperfeat<-as.data.frame(statperfeat)
+cell.ftrs.reprod<-as.data.frame(cell.ftrs.reprod)
+
 save(statperfeat,cell.ftrs.reprod,file="Cell_image reprod.RData")
