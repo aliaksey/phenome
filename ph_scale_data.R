@@ -1,6 +1,8 @@
 rm(list=ls())
 load("ph_raw_data.RData")
 load("Cell_shape_corr.RData")
+##changing orientation parameter
+cell.shape$Cells_AreaShape_Orientation<-abs(cell.shape$Cells_AreaShape_Orientation)
 
 ##selecting cell shape variables
 all.names.temp<-names(cell.ftrs)
@@ -15,8 +17,6 @@ cell.shape.temp<-cell.ftrs[,c("ImageNumber","ObjectNumber", "FeatureIdx",shape.c
 cell.shape<-cell.shape.temp[cell.shape.temp$ImageNumber%in%cell.area.f$ImageNumber&
                               row.names(cell.shape.temp) %in% row.names(cell.area.f),]
 rm(list=c("cell.ftrs","image.data","cell.area.f"))
-##changing orientation parameter
-cell.shape$Cells_AreaShape_Orientation<-abs(cell.shape$Cells_AreaShape_Orientation)
 ##find and remove highly correlated features
 #scale all the features
 cell.shape.data<-cell.shape[,!(colnames(cell.shape) %in% c("ImageNumber", "ObjectNumber",
