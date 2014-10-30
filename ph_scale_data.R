@@ -3,7 +3,7 @@ load("ph_raw_data.RData")
 load("Cell_image reprod.RData")
 load("Cell_shape_corr.RData")
 ##changing orientation parameter
-cell.ftrs$Cells_AreaShape_Orientation<-abs(cell.ftrs.$Cells_AreaShape_Orientation)
+cell.ftrs$Cells_AreaShape_Orientation<-abs(cell.ftrs$Cells_AreaShape_Orientation)
 
 #applying previous filters
 image.data.f<-image.data[image.data$ImageNumber%in%cell.ftrs.reprod$ImageNumber,]
