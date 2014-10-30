@@ -17,23 +17,18 @@ rm(list=c("cell.ftrs","image.data","cell.ftrs.reprod","cell.shape.f"))
 ##aggregating data to image number
 image.ftrs.f<-aggregate(.~ImageNumber, data=cell.ftrs.f, median)
 ##merging 2data sets
-
-image.allftrs<-merge(image.data.f, image.ftrs.f, by="ImageNumber")
-
-##selecting cell shape variables
-all.names.temp<-names(cell.ftrs)
-#selecting only names contains cells_shape
-all.names.cell.t<-all.names.temp[grep("Cells_AreaShape", all.names.temp) ]
-# removing numbers and location features
-shape.col.names<-all.names.cell.t[!grepl("Center", all.names.cell.t)&
-                                    !grepl("Neighbors", all.names.cell.t)&
-                                    !grepl("Zernike", all.names.cell.t)]
-cell.shape.temp<-cell.ftrs[,c("ImageNumber","ObjectNumber", "FeatureIdx",shape.col.names)]
-##find and remove highly correlated features
+image.allftrs.temp<-merge(image.ftrs.f, image.data.f,  by=c("ImageNumber","FeatureIdx"))
+##selecting only numerik variables
+image.allftrs<-image.allftrs.temp[sapply(image.allftrs.temp, is.numeric)]
+## scaling data
 #scale all the features
-cell.shape.data<-cell.shape[,!(colnames(cell.shape) %in% c("ImageNumber", "ObjectNumber",
+image.allftrs.data<-image.allftrs[,!(colnames(image.allftrs) %in% c("ImageNumber", "ObjectNumber",
                                                            "FeatureIdx"))]
-cntr<-apply(cell.shape.data,2,function(x) median(x))
-scl<-apply(cell.shape.data,2,function(x) mad(x))
-datMy.scale<- scale(cell.shape.data,
+cntr<-apply(image.allftrs.data,2,function(x) median(x))
+scl<-apply(image.allftrs.data,2,function(x) mad(x))
+image.allftrs.data.scale<- scale(image.allftrs.data,
                     center=cntr,scale=scl);
+image.allftrs.scale<-cbind(image.allftrs[, c("ImageNumber", "ObjectNumber",
+                               "FeatureIdx")],image.allftrs.data.scale)
+
+save(image.allftrs.scale,image.allftrs, file="joined scaled data.RData")
