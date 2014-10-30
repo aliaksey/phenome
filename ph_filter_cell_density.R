@@ -16,4 +16,5 @@ for(i in unique(cell.density[,"FeatureIdx"])){
                  temp2[,"Image_Count_Cells"]!=0,]
   cell.dns.f<-rbind(cell.dns.f,rsltc) 
 }
+cell.dns.f<-as.data.frame(cell.dns.f)
 save(cell.dns.f,file="Cell_dens_corr.RData")

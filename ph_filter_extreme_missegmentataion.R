@@ -26,4 +26,5 @@ for(i in unique(cell.area[,"FeatureIdx"])){
                    row.names(temp2) %in% row.names(rsltp),]
   cell.area.f<-rbind(cell.area.f,arpr.ftr) 
 }
+cell.area.f<-as.data.frame(cell.area.f)
 save(cell.area.f,file="Cell_area_perim_corr.RData")

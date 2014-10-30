@@ -2,6 +2,13 @@
 ph_filter_comparison_per_image("repeat method 2 validation surface 1427 high ratio left",cell.ftrs.f.scaled,
                       cell.ftrs.reprod, 1427)
 
+ph_filter_comparison_per_image("cell area perimeter validation 1 in min perimeter ",cell.area,
+                               cell.area.f, 1)
+
+ph_filter_comparison_per_image("cell density validation 461 max images re,oved ",cell.density,
+                               cell.dns.f, 461)
+
+
 
 ph_filter_comparison_per_image<-function(name, beforefilter, afterfilter, feature)
 {
