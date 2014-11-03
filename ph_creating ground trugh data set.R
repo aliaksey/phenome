@@ -74,3 +74,4 @@ stk<-cbind(stk[,3:4],Cls="stk")
 all<-rbind(brn,mlt,pnc,spn,stk)
 all$freq<-all$Positive.Cell.Count/all$Total.Cell.Count 
 colnames(all)<-c("Tot","Pos","Cls", "Frq")
+ 
