@@ -1,15 +1,35 @@
+rm(list=ls())
 load("supervised classyfication result.Rdata")
+load("joined scaled data.RData")
 #finding top hits from supervised classyfivcation
 #creating function that will find hits
+varlist <- list(brn,mlt,pnc,spn,stk)
+for (i in varlist) {
+  ##selecting only iamges with cells number 0-10
+  i.f<-i[i$Total.Cell.Count<=10 &i$Total.Cell.Count>0,]
+  ##calculating frequency for cells with positive number
+  i.f$Frequency<-i.f$Positive/i.f$Total
+  i.fs<-i.f[,c("ImageNumber","Enriched.Score.positive","Frequency")]
+  brn_fr<-i.fs[,c("ImageNumber","Frequency")]
+  colnames(brn_fr)<-c("ImageNumber","Branched")
+  brn_es<-i.fs[,c("ImageNumber","Enriched.Score.positive")]
+  colnames(brn_es)<-c("ImageNumber","Branched")
+}
+
+lapply(varlist, function(x) { 
+  x.f<-x[x$Total.Cell.Count<=10 &x$Total.Cell.Count>0,]
+  x.f$Frequency<-x.f$Positive/x.f$Total
+  x.fs<-x.f[,c("ImageNumber","Enriched.Score.positive","Frequency")]
+  brn_fr<-x.fs[,c("ImageNumber","Frequency")]
+  colnames(brn_fr)<-c("ImageNumber","Branched")
+  brn_es<-x.fs[,c("ImageNumber","Enriched.Score.positive")]
+  colnames(brn_es)<-c("ImageNumber","Branched")
+  NULL
+})
+  
 find_hits_supervised<-function(x){
   
-  x<-brn[brn$Total.Cell.Count<=10 & brn$Total.Cell.Count>0,]
-  brn$Frequency<-brn$Positive/brn$Total
-  brn<-brn[,c(1,6,7)]
-  brn_fr<-brn[,c(1,3)]
-  colnames(brn_fr)<-c("Image","Branched")
-  brn_es<-brn[,c(1,2)]
-  colnames(brn_es)<-c("Image","Branched")
+  
 }
 cell.classes<-c("brn","mlt","pnc","spn","stk")
 # for branched
