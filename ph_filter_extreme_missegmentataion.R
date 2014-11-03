@@ -28,3 +28,4 @@ for(i in unique(cell.area[,"FeatureIdx"])){
 }
 cell.area.f<-as.data.frame(cell.area.f)
 save(cell.area.f,file="Cell_area_perim_corr.RData")
+ 
