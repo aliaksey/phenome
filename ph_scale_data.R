@@ -32,4 +32,3 @@ image.allftrs.scale<-cbind(image.allftrs[, c("ImageNumber", "ObjectNumber",
                                "FeatureIdx")],image.allftrs.data.scale)
 
 save(image.allftrs.scale,image.allftrs, file="joined scaled data.RData")
-  
