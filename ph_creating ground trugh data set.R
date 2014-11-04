@@ -30,3 +30,4 @@ for (k in 1:length(varlist)) {
   } 
  }
 save(escoreU, freqU, file="frequency and enrichment score for classes.RData")
+ 
