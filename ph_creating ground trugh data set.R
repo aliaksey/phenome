@@ -33,19 +33,34 @@ save(escoreU, freqU, file="frequency and enrichment score for classes.RData")
 rm(list=ls()) 
 ##selecting top  for ground truth
 load("frequency and enrichment score for classes.RData")
+##select top 1% of data that have highest enrichment score
+esidx<-0.99
+grnd_trth1<-as.data.frame(rbind(cbind(escoreU[escoreU[,"Branched"]>=quantile(escoreU$Branched, prob=esidx), "ImageNumber"] ,"branched"), 
+                 cbind(escoreU[escoreU[,"Multipolar"]>=quantile(escoreU$Multipolar, prob=esidx) ,"ImageNumber"],"multipolar"),
+                 cbind(escoreU[escoreU[,"Pancake"]>=quantile(escoreU$Pancake, prob=esidx) ,"ImageNumber"],"pancake"),
+                 cbind(escoreU[escoreU[,"Spread_pancake"]>=quantile(escoreU$Spread_pancake, prob=esidx), "ImageNumber"], "spancake"),
+                 cbind(escoreU[escoreU[,"Sticks"]>=quantile(escoreU$Sticks, prob=esidx), "ImageNumber"], "sticks")))
+colnames(grnd_trth1)<-c("ImageNumber", "Class")
 ##select top 2% of data that have highest enrichment score
 esidx<-0.98
-
-grnd_trth<-as.data.frame(rbind(cbind(escoreU[escoreU[,"Branched"]>quantile(escoreU$Branched, prob=esidx), "ImageNumber"] ,"branched"), 
-                 cbind(escoreU[escoreU[,"Multipolar"]>quantile(escoreU$Multipolar, prob=esidx) ,"ImageNumber"],"multipolar"),
-                 cbind(escoreU[escoreU[,"Pancake"]>quantile(escoreU$Pancake, prob=esidx) ,"ImageNumber"],"pancake"),
-                 cbind(escoreU[escoreU[,"Spread_pancake"]>quantile(escoreU$Spread_pancake, prob=esidx), "ImageNumber"], "spancake"),
-                 cbind(escoreU[escoreU[,"Sticks"]>quantile(escoreU$Sticks, prob=esidx), "ImageNumber"], "sticks")))
-colnames(grnd_trth)<-c("IamgeNumber", "Class")
-#summary(grnd_trth)
-
-save(grnd_trth, file="Images for Control ground  Truth.Rdata")
-
+grnd_trth2<-as.data.frame(rbind(cbind(escoreU[escoreU[,"Branched"]>=quantile(escoreU$Branched, prob=esidx), "ImageNumber"] ,"branched"), 
+                               cbind(escoreU[escoreU[,"Multipolar"]>=quantile(escoreU$Multipolar, prob=esidx) ,"ImageNumber"],"multipolar"),
+                               cbind(escoreU[escoreU[,"Pancake"]>=quantile(escoreU$Pancake, prob=esidx) ,"ImageNumber"],"pancake"),
+                               cbind(escoreU[escoreU[,"Spread_pancake"]>=quantile(escoreU$Spread_pancake, prob=esidx), "ImageNumber"], "spancake"),
+                               cbind(escoreU[escoreU[,"Sticks"]>=quantile(escoreU$Sticks, prob=esidx), "ImageNumber"], "sticks")))
+colnames(grnd_trth2)<-c("ImageNumber", "Class")
+##select top 2% of data that have highest enrichment score
+esidx<-0.97
+grnd_trth3<-as.data.frame(rbind(cbind(escoreU[escoreU[,"Branched"]>=quantile(escoreU$Branched, prob=esidx), "ImageNumber"] ,"branched"), 
+                                cbind(escoreU[escoreU[,"Multipolar"]>=quantile(escoreU$Multipolar, prob=esidx) ,"ImageNumber"],"multipolar"),
+                                cbind(escoreU[escoreU[,"Pancake"]>=quantile(escoreU$Pancake, prob=esidx) ,"ImageNumber"],"pancake"),
+                                cbind(escoreU[escoreU[,"Spread_pancake"]>=quantile(escoreU$Spread_pancake, prob=esidx), "ImageNumber"], "spancake"),
+                                cbind(escoreU[escoreU[,"Sticks"]>=quantile(escoreU$Sticks, prob=esidx), "ImageNumber"], "sticks")))
+colnames(grnd_trth3)<-c("ImageNumber", "Class")
+summary(grnd_trth1)
+summary(grnd_trth2)
+summary(grnd_trth3)
+save(grnd_trth1,grnd_trth2,grnd_trth3, file="Images for Control ground  Truth all3.Rdata")
 
 ##old approach
 # grnd_trth=rbind(branched=matrix(c(na.omit(escoreU[escoreU[,2]>1 & freqU[,2]==1,1])
