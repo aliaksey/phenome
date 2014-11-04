@@ -41,6 +41,8 @@ grnd_trth1<-as.data.frame(rbind(cbind(escoreU[escoreU[,"Branched"]>=quantile(esc
                  cbind(escoreU[escoreU[,"Spread_pancake"]>=quantile(escoreU$Spread_pancake, prob=esidx), "ImageNumber"], "spancake"),
                  cbind(escoreU[escoreU[,"Sticks"]>=quantile(escoreU$Sticks, prob=esidx), "ImageNumber"], "sticks")))
 colnames(grnd_trth1)<-c("ImageNumber", "Class")
+grnd_trth1<-grnd_trth1[!grnd_trth1$ImageNumber%in%grnd_trth1[duplicated(grnd_trth1$ImageNumber),
+                                                                  "ImageNumber"],]
 ##select top 2% of data that have highest enrichment score
 esidx<-0.98
 grnd_trth2<-as.data.frame(rbind(cbind(escoreU[escoreU[,"Branched"]>=quantile(escoreU$Branched, prob=esidx), "ImageNumber"] ,"branched"), 
@@ -49,6 +51,8 @@ grnd_trth2<-as.data.frame(rbind(cbind(escoreU[escoreU[,"Branched"]>=quantile(esc
                                cbind(escoreU[escoreU[,"Spread_pancake"]>=quantile(escoreU$Spread_pancake, prob=esidx), "ImageNumber"], "spancake"),
                                cbind(escoreU[escoreU[,"Sticks"]>=quantile(escoreU$Sticks, prob=esidx), "ImageNumber"], "sticks")))
 colnames(grnd_trth2)<-c("ImageNumber", "Class")
+grnd_trth2<-grnd_trth2[!grnd_trth2$ImageNumber%in%grnd_trth2[duplicated(grnd_trth2$ImageNumber),
+                                                             "ImageNumber"],]
 ##select top 2% of data that have highest enrichment score
 esidx<-0.97
 grnd_trth3<-as.data.frame(rbind(cbind(escoreU[escoreU[,"Branched"]>=quantile(escoreU$Branched, prob=esidx), "ImageNumber"] ,"branched"), 
@@ -57,6 +61,8 @@ grnd_trth3<-as.data.frame(rbind(cbind(escoreU[escoreU[,"Branched"]>=quantile(esc
                                 cbind(escoreU[escoreU[,"Spread_pancake"]>=quantile(escoreU$Spread_pancake, prob=esidx), "ImageNumber"], "spancake"),
                                 cbind(escoreU[escoreU[,"Sticks"]>=quantile(escoreU$Sticks, prob=esidx), "ImageNumber"], "sticks")))
 colnames(grnd_trth3)<-c("ImageNumber", "Class")
+grnd_trth3<-grnd_trth3[!grnd_trth3$ImageNumber%in%grnd_trth3[duplicated(grnd_trth3$ImageNumber),
+                                                             "ImageNumber"],]
 summary(grnd_trth1)
 summary(grnd_trth2)
 summary(grnd_trth3)
