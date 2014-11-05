@@ -1,4 +1,5 @@
 rm(list=ls())
+#library(data.table)
 load("ph_raw_data.RData")
 load("Cell_image reprod.RData")
 load("Cell_shape_corr.RData")
@@ -15,6 +16,8 @@ cell.ftrs.f<-cell.ftrs[cell.ftrs$ImageNumber%in%cell.ftrs.reprod$ImageNumber&
 #plot(density(cell.ftrs.f[cell.ftrs.f$FeatureIdx==975,"Cells_AreaShape_Eccentricity"]))
 rm(list=c("cell.ftrs","image.data","cell.ftrs.reprod","cell.shape.f"))
 ##aggregating data to image number
+# data_t = data.table(data_tab)
+# image.ftrs.f = data_t[,list(A = sum(count), B = mean(count)), by = c('PID, Time, Site')]
 image.ftrs.f<-aggregate(.~ImageNumber, data=cell.ftrs.f, median)
 ##merging 2data sets
 image.allftrs.temp<-merge(image.ftrs.f, image.data.f,  by=c("ImageNumber","FeatureIdx"))
