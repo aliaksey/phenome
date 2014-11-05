@@ -71,7 +71,7 @@ grnd_trth3.sf<-grnd_trth3.sf[!grnd_trth3.sf$FeatureIdx%in%grnd_trth3.sf[duplicat
 summary(grnd_trth1.sf)
 summary(grnd_trth2.sf)
 summary(grnd_trth3.sf)
-save(grnd_trth1.sf,grnd_trth2.sf,grnd_trth3.sf, file="Images for Control ground  Truth all3.Rdata")
+save(grnd_trth1.sf,grnd_trth2.sf,grnd_trth3.sf, file="Images for Control ground  Truth all3 feature edition.Rdata")
 
 ##old approach
 # grnd_trth=rbind(branched=matrix(c(na.omit(escoreU[escoreU[,2]>1 & freqU[,2]==1,1])
