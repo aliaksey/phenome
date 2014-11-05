@@ -33,5 +33,6 @@ image.allftrs.data.scale<- scale(image.allftrs.data,
                     center=cntr,scale=scl);
 image.allftrs.scale<-cbind(image.allftrs[, c("ImageNumber", "ObjectNumber",
                                "FeatureIdx")],image.allftrs.data.scale)
+image.allftrs.scale<-image.allftrs.scale[ , ! apply( image.allftrs.scale , 2 , function(x) all(is.na(x)) ) ]
 
 save(image.allftrs.scale,image.allftrs, file="joined scaled data.RData")
