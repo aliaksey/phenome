@@ -1,9 +1,18 @@
 rm(list=ls())
 load("Cell all data & ground truth scaled.RData")
+#import packages
+library(foreach)
+library(doParallel)
 library(caret)
+#setup parallel backend to use 8 processors
+cl<-makeCluster(8)
+registerDoParallel(cl)
+
 ##performing on features
 model.sel.res.feat <- vector("list",length(grnd.truth.feat.scale))
-for(k in 1:length(grnd.truth.feat.scale)){
+result1<-foreach(k=1:length(grnd.truth.feat.scale)) %dopar%{
+print(k)
+library(caret)
 ## creating models by backward selection
 #load caret library
 #load data features
@@ -27,10 +36,17 @@ testDescr <- testDescr[, -highCorr]
 svmProfile <- rfe(x=trainDescr, y = trainClass, sizes = c(1:20), 
 rfeControl= rfeControl(functions = caretFuncs,number = 200),method = "svmRadial",fit = FALSE)
 model.sel.res.feat[[k]]<-svmProfile
+
 }
+stopCluster(cl)
 ##performing on images
+#setup parallel backend to use 8 processors
+cl<-makeCluster(8)
+registerDoParallel(cl)
+
 model.sel.res.img <- vector("list",length(grnd.truth.img.scale))
-for(k in 1:length(grnd.truth.img.scale)){
+result2<-foreach(k=1:length(grnd.truth.img.scale)) %dopar%{
+  library(caret)
   #load data features
   data_features<-grnd.truth.img.scale[[k]][,!(colnames(grnd.truth.img.scale[[k]])%in%c("FeatureIdx","Class"))]
   #load data classes
@@ -52,4 +68,5 @@ for(k in 1:length(grnd.truth.img.scale)){
                     rfeControl= rfeControl(functions = caretFuncs,number = 200),method = "svmRadial",fit = FALSE)
   model.sel.res.img[[k]]<-svmProfile
 }
+stopCluster(cl)
 save(model.sel.res.img, model.sel.res.feat, file="model selection result.RData")
