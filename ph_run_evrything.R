@@ -1,4 +1,5 @@
-ptm <- proc.time()
+#start time
+strt<-Sys.time()
 #source("ph_load_raw_data.R")
 source("ph_filter_cell_density.R")
 source("ph_filter_extreme_missegmentataion.R")
@@ -9,4 +10,4 @@ source("ph_creating ground trugh data set.R")
 source("ph_creating ground trugh data set feature edition.R")
 source("ph_groundtruth_scaling and joining data.R")
 #source("ph_find_set of features to use for clustering.R")
-proc.time() - ptm
+print(Sys.time()-strt)
