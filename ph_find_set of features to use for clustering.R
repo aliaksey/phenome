@@ -11,7 +11,6 @@ registerDoParallel(cl)
 ##performing on features
 model.sel.res.feat <- vector("list",length(grnd.truth.feat.scale))
 result1<-foreach(k=1:length(grnd.truth.feat.scale)) %dopar%{
-print(k)
 library(caret)
 ## creating models by backward selection
 #load caret library
