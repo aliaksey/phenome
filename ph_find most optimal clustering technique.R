@@ -32,6 +32,11 @@ simple.5<-simple.4[!grepl("Compact",simple.4)]
 zernike.cellshape.name<-all.names.temp[grepl("Zernike", all.names.temp)]
 ##selecting non coreelated cell features
 
+
+
+##selecting pca
+
+datapca<-data.pca$x[,1:3]
 # descrCorr <- cor(as.matrix(trainDescr))
 # highCorr <- findCorrelation(descrCorr, 0.70)
 # trainDescr <- trainDescr[, -highCorr]
