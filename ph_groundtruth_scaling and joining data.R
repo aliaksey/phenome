@@ -5,7 +5,8 @@ load("joined scaled data.RData")
 load("ph_raw_data.RData")
 ## selecting features related to cell
 all.names.temp<-names(image.allftrs.scale)
-clsnames<-all.names.temp[grep("Cells", all.names.temp)]
+clsnames<-all.names.temp[grepl("Cells", all.names.temp)|
+                           grepl("Actin", all.names.temp)]
 image.cell.scale<-image.allftrs.scale[,c("ImageNumber","FeatureIdx",clsnames)]
 image.cell<-image.allftrs[,c("ImageNumber","FeatureIdx",clsnames)]
 #merging data together
