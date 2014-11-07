@@ -7,6 +7,7 @@ library("doParallel")
 library(caret)
 load("Cell all data & ground truth scaled.RData")
 load("model selection svm.RData")
+load("pca results for ground truth and all.RData")
 #load("model selection rf.RData")
 # selecting cell names find by model simulation
 #svm
