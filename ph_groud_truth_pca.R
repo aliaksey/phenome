@@ -70,4 +70,4 @@ ground.truth.pca<-c(ground.truth.pca,results.temp)
 }
 
 
-save(ground.truth.pca, pca.results.all, file=" pca results for ground truth and all.RData")
+save(ground.truth.pca, pca.results.all, file="pca results for ground truth and all.RData")
