@@ -9,5 +9,7 @@ source("ph_scale_data.R")
 source("ph_creating ground trugh data set.R")
 source("ph_creating ground trugh data set feature edition.R")
 source("ph_groundtruth_scaling and joining data.R")
-#source("ph_find_set of features to use for clustering.R")
+source("ph_find_set of features to use for clustering.R")##can take a lot of hours, better load previous res
+source("ph_groud_truth_pca.R")
+source("ph_find most optimal clustering technique.R")
 print(Sys.time()-strt)
