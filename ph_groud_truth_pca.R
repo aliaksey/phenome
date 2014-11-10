@@ -59,10 +59,10 @@ for(k in 1:length(all.dat)){
              function(x)merge(x,pca.res.m, by="FeatureIdx"))
 }
 if(grepl("Image",names(all.dat[k]))){
-names(results.temp)<-apply(expand.grid(c("image 1%","image 2%","image 3%"), 
+names(results.temp)<-apply(expand.grid(c("PCA_image 1%","PCA_image 2%","PCA_image 3%"), 
                                        names(all.dat[k])), 1, paste, collapse=" ")
 }else{
-  names(results.temp)<-apply(expand.grid(c("feat 1%","feat 2%","feat 3%"), names(all.dat[k])), 1, paste, collapse=" ")
+  names(results.temp)<-apply(expand.grid(c("PCA_feat 1%","PCA_feat 2%","PCA_feat 3%"), names(all.dat[k])), 1, paste, collapse=" ")
   
 }
 ground.truth.pca<-c(ground.truth.pca,results.temp)
