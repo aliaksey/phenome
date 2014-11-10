@@ -32,6 +32,10 @@ simple.cellshape.name<-all.names.temp[grepl("Cells_AreaShape", all.names.temp)
                                       & !grepl("Zernike", all.names.temp)&
                                              !grepl("Center", all.names.temp)&
                                              !grepl("Neighbors", all.names.temp)]
+## create all possible combination of cell shape parameters to use in analysis 
+#combn(simple.cellshape.name,n)
+#do.call(paste, expand.grid(simple.cellshape.name,1:n))
+
 simple.2<-simple.cellshape.name[!grepl("Orientation",simple.cellshape.name)]
 simple.3<-simple.2[!grepl("Euler",simple.2)]
 simple.4<-simple.3[!grepl("Major",simple.3)]
@@ -218,11 +222,14 @@ for(ih in 1:length(ground.truth.pca)){
 ##################all results######################
 clust_accur_results<-rbind(hclust_accr,kmean_accr, hclust_accr_pca,kmean_accr_pca)
 clust_accur_results$Accuracy<-as.numeric(as.character(clust_accur_results$Accuracy))
-clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
-tail(clust_accur_results, n=20L)
+clust_accur_results<-unique(clust_accur_results[order(clust_accur_results$Accuracy),])
+tail(clust_accur_results, n=1000L)
 plot(clust_accur_results$Accuracy)
 
 save(clust_accur_results, file="accuracy of unsupervised method.Rdata")
+
+do.call(paste, expand.grid(simple.cellshape.name,1:10))
+length(combn(simple.cellshape.name,3))
 
 # ##validation
 # data.dist<-dist(grnd.truth[[3]][,simple.3], method="maximum")
