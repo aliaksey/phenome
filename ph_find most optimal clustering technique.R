@@ -148,9 +148,9 @@ for(ih in 1:length(ground.truth.pca)){
         }
         accur<- as.numeric(max.col/sum(accur_mes))
         ##saving all results
-        mthod_result<-cbind(names(ground.truth.pca[ih]),mthd.dist,mthd.cl, paste("PC",ip,sep=""), accur)
-        colnames(mthod_result)<-c("GroundTruth","DistanceMethod","ClusterMethod","FeatureNames","Accuracy")
-        hclust_accr_pca<-as.data.frame(rbind(hclust_accr, mthod_result))
+        mthod_result.p<-cbind(names(ground.truth.pca[ih]),mthd.dist,mthd.cl, paste("PC",ip,sep=""), accur)
+        colnames(mthod_result.p)<-c("GroundTruth","DistanceMethod","ClusterMethod","FeatureNames","Accuracy")
+        hclust_accr_pca<-as.data.frame(rbind(hclust_accr_pca, mthod_result.p))
       }
     }
   }
@@ -183,9 +183,9 @@ for(k in 1:length(unique(class.un))){
 }
 accur<- as.numeric(max.col/sum(accur_mes))
 ##saving all results
-mthod_result<-cbind(names(grnd.truth[ih]),"NA","K-Means", names(selnames[im]),accur)
-colnames(mthod_result)<-c("GroundTruth","DistanceMethod","ClusterMethod","FeatureNames","Accuracy")
-kmean_accr<-as.data.frame(rbind(kmean_accr, mthod_result))
+mthod_result.k<-cbind(names(grnd.truth[ih]),"NA","K-Means", names(selnames[im]),accur)
+colnames(mthod_result.k)<-c("GroundTruth","DistanceMethod","ClusterMethod","FeatureNames","Accuracy")
+kmean_accr<-as.data.frame(rbind(kmean_accr, mthod_result.k))
   }
 }
 
@@ -214,15 +214,15 @@ for(ih in 1:length(ground.truth.pca)){
     }
     accur<- as.numeric(max.col/sum(accur_mes))
     ##saving all results
-    mthod_result<-cbind(names(ground.truth.pca[ih]),"NA","K-Means", paste("PC",ip,sep=""),accur)
-    colnames(mthod_result)<-c("GroundTruth","DistanceMethod","ClusterMethod","FeatureNames","Accuracy")
-    kmean_accr_pca<-as.data.frame(rbind(kmean_accr_pca, mthod_result))
+    mthod_result.kp<-cbind(names(ground.truth.pca[ih]),"NA","K-Means", paste("PC",ip,sep=""),accur)
+    colnames(mthod_result.kp)<-c("GroundTruth","DistanceMethod","ClusterMethod","FeatureNames","Accuracy")
+    kmean_accr_pca<-as.data.frame(rbind(kmean_accr_pca, mthod_result.kp))
   }
 }
 ##################all results######################
 clust_accur_results<-rbind(hclust_accr,kmean_accr, hclust_accr_pca,kmean_accr_pca)
 clust_accur_results$Accuracy<-as.numeric(as.character(clust_accur_results$Accuracy))
-clust_accur_results<-unique(clust_accur_results[order(clust_accur_results$Accuracy),])
+clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
 tail(clust_accur_results, n=1000L)
 plot(clust_accur_results$Accuracy)
 
