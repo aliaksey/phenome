@@ -6,18 +6,18 @@ require("ggplot2")
 library("caret")
 library("plyr")
 load("Cell all data & ground truth scaled.RData")
-load("model selection svm.RData")
+load("model_selection_svm.RData")
 load("pca_results_for_ground_truth_and_all.RData")
-#load("model selection rf.RData")
+load("model_selection_rf.RData")
 # selecting cell names find by model simulation
 #svm
 model.svm.1<-predictors(model.sel.res.feat.svm[[1]])
 model.svm.2<-predictors(model.sel.res.feat.svm[[2]])
 model.svm.3<-predictors(model.sel.res.feat.svm[[3]])
 #rf
-# model.rf.1<-predictors(model.sel.res.feat.rf[[1]])
-# model.rf.2<-predictors(model.sel.res.feat.rf[[2]])
-# model.rf.3<-predictors(model.sel.res.feat.rf[[3]])
+model.rf.1<-predictors(model.sel.res.feat.rf[[1]])
+model.rf.2<-predictors(model.sel.res.feat.rf[[2]])
+model.rf.3<-predictors(model.sel.res.feat.rf[[3]])
 ##selecting cell shape variables creating 3 class.unes ofv variables: 10 simple; Zernike; and selected by bootstrap
 all.names.temp<-names(image.cell.scale)
 
@@ -46,7 +46,7 @@ zernike.cellshape.name<-all.names.temp[grepl("Zernike", all.names.temp)]
 ##putting all names togrther
 selnames.temp<-list(All_meaningful=all.names,Simple=simple.cellshape.name,Simple2=simple.2,Simple3=simple.3, Simple4=simple.4,
                Simple5=simple.5, Zernike=zernike.cellshape.name, 
-               SVM1=model.svm.1,SVM2=model.svm.2,SVM3=model.svm.3)
+               SVM1=model.svm.1,SVM2=model.svm.2,SVM3=model.svm.3,RF1=model.rf.1,RF2=model.rf.2,RF3=model.rf.3)
 selnames.corr.surf<-vector("list",length(selnames.temp))
 selnames.corr.im<-vector("list",length(selnames.temp))
 for(kk in 1:length(selnames.temp)){
