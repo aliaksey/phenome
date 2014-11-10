@@ -228,8 +228,8 @@ plot(clust_accur_results$Accuracy)
 
 save(clust_accur_results, file="accuracy of unsupervised method.Rdata")
 
-do.call(paste, expand.grid(simple.cellshape.name,1:10))
-length(combn(simple.cellshape.name,3))
+#do.call(paste, expand.grid(simple.cellshape.name,1:10))
+#length(combn(simple.cellshape.name,3))
 
 # ##validation
 # data.dist<-dist(grnd.truth[[3]][,simple.3], method="maximum")
