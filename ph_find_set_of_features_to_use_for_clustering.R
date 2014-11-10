@@ -4,15 +4,14 @@ load("Cell all data & ground truth scaled.RData")
 library(foreach)
 library(doParallel)
 library(caret)
-#setup parallel backend to use all processors
+#setup parallel backend to use 8 processors
 cl<-makeCluster(detectCores())
 registerDoParallel(cl)
 
 ##performing on features
-model.sel.res.feat.svm<- vector("list",length(grnd.truth.feat.scale))
+#model.sel.res.feat.svm.2<- vector("list",length(grnd.truth.feat.scale))
 model.sel.res.feat.svm<-foreach(k=1:length(grnd.truth.feat.scale)) %dopar%{
-  library(caret)
-  
+  library("caret")
   library("ipred")
   library("gbm")
   ## creating models by backward selection
@@ -28,7 +27,6 @@ model.sel.res.feat.svm<-foreach(k=1:length(grnd.truth.feat.scale)) %dopar%{
   testDescr <- data_features[-inTrain,]
   trainClass <- data_class[inTrain]
   testClass <- data_class[-inTrain]
-  is.numeric(trainDescr)
   # # remove the redundant features
   # descrCorr <- cor(as.matrix(trainDescr))
   # highCorr <- findCorrelation(descrCorr, 0.70)
@@ -37,16 +35,17 @@ model.sel.res.feat.svm<-foreach(k=1:length(grnd.truth.feat.scale)) %dopar%{
   #perform backwards selection.
   svmProfile <- rfe(x=trainDescr, y = trainClass, sizes = c(1:20), 
                     rfeControl= rfeControl(functions = caretFuncs,number = 200),method = "svmRadial",fit = FALSE)
-  model.sel.res.feat[[k]]<-svmProfile
+  svmProfile
+  #model.sel.res.feat.2[[k]]<-svmProfile
 }
 stopCluster(cl)
-save(model.sel.res.feat.svm, file="model selection svm.RData")
+save(model.sel.res.feat.svm, file="model_selection_svm.RData")
 
 cl<-makeCluster(detectCores())
 registerDoParallel(cl)
-model.sel.res.feat.rf<- vector("list",length(grnd.truth.feat.scale))
+#model.sel.res.feat.rf.2<- vector("list",length(grnd.truth.feat.scale))
 model.sel.res.feat.rf<-foreach(k=1:length(grnd.truth.feat.scale)) %dopar%{
-  library(caret)
+  library("caret")
   library("randomForest")
   library("ipred")
   library("gbm")
@@ -71,11 +70,13 @@ model.sel.res.feat.rf<-foreach(k=1:length(grnd.truth.feat.scale)) %dopar%{
   # testDescr <- testDescr[, -highCorr]
   #perform backwards selection.
   rfProfile <- rfe(x=trainDescr, y = trainClass, sizes = c(1:20), 
-                   rfeControl= rfeControl(functions = rfFuncs))
-  model.sel.res.feat[[k]]<-rfProfile
+                   rfeControl= rfeControl(functions = rfFuncs, method = "boot", verbose = FALSE,
+                                          returnResamp = "final", number = 200))
+  rfProfile
+  # model.sel.res.feat.2[[k]]<-rfProfile
 }
 stopCluster(cl)
-save(model.sel.res.feat.rf, file="model selection rf.RData")
+save(model.sel.res.feat.rf, file="model_selection_rf.RData")
 
 
 ##performing on images
