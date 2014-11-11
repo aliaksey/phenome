@@ -27,7 +27,7 @@ hclust.meth<-c("ward.D", "ward.D2", "single", "complete", "average", "mcquitty" 
 ##setting metods for disstances hclust
 dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski") #"canberra",
 hclust.meth.u<-hclust.meth[1]
-dist.meth.u<-dist.meth[3]
+dist.meth.u<-dist.meth[1]
 #calculating disctance matrix
 data.dist<-dist(feature.cell.scale[,simple.5], method=dist.meth.u)
 #performing clustering
