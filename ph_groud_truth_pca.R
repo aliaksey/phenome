@@ -2,33 +2,36 @@ rm(list=ls())
 ##loading data
 load("Cell all data & ground truth scaled.RData")
 ## selecting features meaningfull for shape measurement
+##omiting rows with na
 all.names.temp<-names(image.cell.scale)
+all.names.temp.f<-names(feature.cell.scale)
+
 mngfll.names.im<-all.names.temp[!grepl("Object_Number", all.names.temp)&
                                 !grepl("FeatureIdx", all.names.temp)&
                                 !grepl("ImageNumber", all.names.temp)&
                                !grepl("AreaShape_Center", all.names.temp)&
                                !grepl("ImageQuality", all.names.temp)&
                                !grepl("AreaShape_Center", all.names.temp)]
-mngfll.names.feat<-all.names.temp[!grepl("ImageNumber", all.names.temp)&
-                                  !grepl("FeatureIdx", all.names.temp)&
-                                  !grepl("Object_Number", all.names.temp)&
-                                  !grepl("AreaShape_Center", all.names.temp)&
-                                  !grepl("ImageQuality", all.names.temp)&
-                                  !grepl("AreaShape_Center", all.names.temp)]
+mngfll.names.feat<-all.names.temp.f[!grepl("ImageNumber", all.names.temp.f)&
+                                  !grepl("FeatureIdx", all.names.temp.f)&
+                                  !grepl("Object_Number", all.names.temp.f)&
+                                  !grepl("AreaShape_Center", all.names.temp.f)&
+                                  !grepl("ImageQuality", all.names.temp.f)&
+                                  !grepl("AreaShape_Center", all.names.temp.f)]
 mngfll.names.im.Zernike<-all.names.temp[grepl("Zernike", all.names.temp)&
                                   !grepl("ImageNumber", all.names.temp)]
-mngfll.names.feat.Zernike<-all.names.temp[grepl("Zernike", all.names.temp)&
-                                          !grepl("FeatureIdx", all.names.temp)]
+mngfll.names.feat.Zernike<-all.names.temp.f[grepl("Zernike", all.names.temp.f)&
+                                          !grepl("FeatureIdx", all.names.temp.f)]
 mngfll.names.im.simple<-all.names.temp[grepl("Cells_AreaShape", all.names.temp)&
                                         !grepl("Zernike", all.names.temp)&
                                         !grepl("Center", all.names.temp)&
                                         !grepl("Neighbors", all.names.temp)&
                                         !grepl("ImageNumber", all.names.temp)]
-mngfll.names.feat.simple<-all.names.temp[grepl("Cells_AreaShape", all.names.temp)&
-                                         !grepl("Zernike", all.names.temp)&
-                                         !grepl("Center", all.names.temp)&
-                                         !grepl("Neighbors", all.names.temp)&
-                                         !grepl("FeatureIdx", all.names.temp)]
+mngfll.names.feat.simple<-all.names.temp.f[grepl("Cells_AreaShape", all.names.temp.f)&
+                                         !grepl("Zernike", all.names.temp.f)&
+                                         !grepl("Center", all.names.temp.f)&
+                                         !grepl("Neighbors", all.names.temp.f)&
+                                         !grepl("FeatureIdx", all.names.temp.f)]
 ## creating input data                                   
 image.sc.dat.all<-image.cell.scale[,mngfll.names.im]
 feat.sc.dat.all<-feature.cell.scale[,mngfll.names.feat]

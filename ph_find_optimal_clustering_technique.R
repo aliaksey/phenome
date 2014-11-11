@@ -47,6 +47,7 @@ zernike.cellshape.name<-all.names.temp[grepl("Zernike", all.names.temp)]
 selnames.temp<-list(All_meaningful=all.names,Simple=simple.cellshape.name,Simple2=simple.2,Simple3=simple.3, Simple4=simple.4,
                Simple5=simple.5, Zernike=zernike.cellshape.name, 
                SVM1=model.svm.1,SVM2=model.svm.2,SVM3=model.svm.3,RF1=model.rf.1,RF2=model.rf.2,RF3=model.rf.3)
+#
 selnames.corr.surf<-vector("list",length(selnames.temp))
 selnames.corr.im<-vector("list",length(selnames.temp))
 for(kk in 1:length(selnames.temp)){
@@ -227,7 +228,7 @@ clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
 tail(clust_accur_results, n=1000L)
 plot(clust_accur_results$Accuracy)
 
-save(clust_accur_results, file="accuracy_of_unsupervised_method.Rdata")
+save(clust_accur_results, file="accuracy_of_unsupervised_method2.Rdata")
 
 #do.call(paste, expand.grid(simple.cellshape.name,1:10))
 #length(combn(simple.cellshape.name,3))
@@ -238,4 +239,23 @@ save(clust_accur_results, file="accuracy_of_unsupervised_method.Rdata")
 # plot(hclustres)
 # uns.clusters<-cutree(hclustres,length(unique(class.un)))
 # table(uns.clusters, grnd.truth[[3]][,"Class"])               
+
 ##find most oprimal combination of all parameters
+out <- strsplit(as.character(clust_accur_results$GroundTruth),' ') 
+clust_accur_results$Set<-do.call(rbind, out)[,1]
+##find out what best method on average for surface and image
+average_accuracy_all<-ddply(clust_accur_results, .(DistanceMethod, ClusterMethod,
+                             FeatureNames, Set ), summarise, Accmean=mean(Accuracy))
+average_accuracy_all<-average_accuracy_all[order(average_accuracy_all$Accmean),]
+tail(average_accuracy_all, , n=10L)
+##find out what best method on average for surface and image reagrding set of features
+average_accuracy_method<-ddply(clust_accur_results, .(DistanceMethod, ClusterMethod,
+                                                   Set ), summarise, Accmean=mean(Accuracy))
+average_accuracy_method<-average_accuracy_method[order(average_accuracy_method$Accmean),]
+tail(average_accuracy_method, , n=10L)
+
+##find out what best method on average for surface and image reagrding set of features and groundtruth set
+# average_accuracy_method2<-ddply(clust_accur_results, .(DistanceMethod, ClusterMethod), 
+#                                 summarise, Accmean=mean(Accuracy))
+# average_accuracy_method2<-average_accuracy_method2[order(average_accuracy_method2$Accmean),]
+# tail(average_accuracy_method2, , n=10L)

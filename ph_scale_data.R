@@ -16,9 +16,20 @@ cell.ftrs.f<-cell.ftrs[cell.ftrs$ImageNumber%in%cell.ftrs.reprod$ImageNumber&
 #plot(density(cell.ftrs.f[cell.ftrs.f$FeatureIdx==975,"Cells_AreaShape_Eccentricity"]))
 rm(list=c("cell.ftrs","image.data","cell.ftrs.reprod","cell.shape.f"))
 ##aggregating data to image number
+##Function for finding mode 
+# find.mode <- function(x) {
+#   ux <- unique(x)
+#   ux[which.max(tabulate(match(x, ux)))]
+# }
 # data_t = data.table(data_tab)
 # image.ftrs.f = data_t[,list(A = sum(count), B = mean(count)), by = c('PID, Time, Site')]
+
+##based on median
 image.ftrs.f<-aggregate(.~ImageNumber, data=cell.ftrs.f, median)
+
+##based on mode
+#image.ftrs.f<-aggregate(.~ImageNumber, data=cell.ftrs.f, find.mode)
+
 ##merging 2data sets
 image.allftrs.temp<-merge(image.ftrs.f, image.data.f,  by=c("ImageNumber","FeatureIdx"))
 ##selecting only numerik variables

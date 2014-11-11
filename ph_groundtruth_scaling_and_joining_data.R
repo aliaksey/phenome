@@ -16,7 +16,16 @@ grnd.truth.img.scale <- lapply(grnd.truth.images, function(x){merge(x, image.cel
 
 ##merging for data truth based on surfaces
 #aggregate all data to features
+##Function for finding mode 
+# find.mode <- function(x) {
+#   ux <- unique(x)
+#   ux[which.max(tabulate(match(x, ux)))]
+# }
+##based on median
 feature.cell<-aggregate(.~FeatureIdx, data=image.cell, median)
+
+##based on mode
+#feature.cell<-aggregate(.~FeatureIdx, data=image.cell, find.mode)
 ##Scaling data
 feature.cell.data<-feature.cell[,!(colnames(feature.cell) %in% c("ImageNumber", 
                                                                  "FeatureIdx","Cells_Number_Object_Number"))]
