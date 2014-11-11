@@ -221,7 +221,8 @@ for(ih in 1:length(ground.truth.pca)){
 }
 ##################all results######################
 clust_accur_results<-rbind(hclust_accr,kmean_accr, hclust_accr_pca,kmean_accr_pca)
-clust_accur_results$Accuracy<-as.numeric(as.character(clust_accur_results$Accuracy))
+clust_accur_results <- data.frame(lapply(clust_accur_results, as.character), stringsAsFactors=FALSE)
+clust_accur_results$Accuracy<-as.numeric(clust_accur_results$Accuracy)
 clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
 tail(clust_accur_results, n=1000L)
 plot(clust_accur_results$Accuracy)
