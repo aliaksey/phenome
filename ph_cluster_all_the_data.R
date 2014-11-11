@@ -33,9 +33,15 @@ data.dist<-dist(feature.cell.scale[,simple.5], method=dist.meth.u)
 #performing clustering
 hclustres<-hclust(data.dist, method = hclust.meth.u)
 plot(hclustres)
+rect.hclust(hclustres,h=50,)
 #########do the same for control####################
 #calculating disctance matrix
 data.dist<-dist(grnd.truth.feat.scale[[3]][,simple.5], method=dist.meth.u)
 #performing clustering
-hclustres<-hclust(data.dist, method = hclust.meth.u)
-plot(hclustres)
+hclustres_con<-hclust(data.dist, method = hclust.meth.u)
+plot(hclustres_con)
+########saving all clusters together##############
+
+Classes<-cutree(scphcl.hclust,5)
+
+
