@@ -21,8 +21,14 @@ grnd.truth.img.scale <- lapply(grnd.truth.images, function(x){merge(x, image.cel
 #   ux <- unique(x)
 #   ux[which.max(tabulate(match(x, ux)))]
 # }
+
+
 ##based on median
 feature.cell<-aggregate(.~FeatureIdx, data=image.cell, median)
+
+##based on mean
+#feature.cell<-aggregate(.~FeatureIdx, data=image.cell, function(x) mean(x,trimm=0.2))
+
 
 ##based on mode
 #feature.cell<-aggregate(.~FeatureIdx, data=image.cell, find.mode)

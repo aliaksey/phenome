@@ -27,6 +27,9 @@ rm(list=c("cell.ftrs","image.data","cell.ftrs.reprod","cell.shape.f"))
 ##based on median
 image.ftrs.f<-aggregate(.~ImageNumber, data=cell.ftrs.f, median)
 
+##based on trimmed mean
+#image.ftrs.f<-aggregate(.~ImageNumber, data=cell.ftrs.f, function(x) mean(x,trimm=0.2))
+
 ##based on mode
 #image.ftrs.f<-aggregate(.~ImageNumber, data=cell.ftrs.f, find.mode)
 

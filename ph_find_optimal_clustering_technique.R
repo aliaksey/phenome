@@ -228,7 +228,9 @@ clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
 tail(clust_accur_results, n=1000L)
 plot(clust_accur_results$Accuracy)
 
-save(clust_accur_results, file="accuracy_of_unsupervised_method2.Rdata")
+save(clust_accur_results, file="accuracy_of_unsupervised_method1_4.Rdata")
+
+load("accuracy_of_unsupervised_method.Rdata")
 
 #do.call(paste, expand.grid(simple.cellshape.name,1:10))
 #length(combn(simple.cellshape.name,3))
@@ -253,6 +255,8 @@ average_accuracy_method<-ddply(clust_accur_results, .(DistanceMethod, ClusterMet
                                                    Set ), summarise, Accmean=mean(Accuracy))
 average_accuracy_method<-average_accuracy_method[order(average_accuracy_method$Accmean),]
 tail(average_accuracy_method, , n=10L)
+
+
 
 ##find out what best method on average for surface and image reagrding set of features and groundtruth set
 # average_accuracy_method2<-ddply(clust_accur_results, .(DistanceMethod, ClusterMethod), 
