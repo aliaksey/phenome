@@ -58,3 +58,25 @@ plot(hclustres)
 rect.hclust(hclustres,h=50)
 ##reults of clustering
 surface.data.clust<-cbind(Cluster=cutree(hclustres,h=50),feature.cell.scale)
+
+###finf medoids of cluster
+# function to find medoid in cluster 
+clust.medoid = function(i, distmat, clusters) {
+  ind = (clusters$Cluster == i)
+  if (sum(ind)>1){
+    names(which.min(rowSums(distmat[ind, ind] )))
+    # c(min(rowMeans( distmat[ind, ind] )))
+  }else{
+    collmor[ind,1]
+  }
+}
+
+distmatclust<-as.matrix(data.dist)
+rownames(distmatclust)<-surface.data.clust[,2]
+
+clust.medoids<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(surface.data.clust$Cluster),
+clust.medoid, distmatclust, surface.data.clust)),Cluster=unique(surface.data.clust$Cluster)))
+
+
+
+save(surface.data.clust,clust.medoids, file="Surface_clusters.Rdata")
