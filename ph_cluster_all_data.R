@@ -56,3 +56,5 @@ data.dist<-dist(feature.cell.scale[,simple.4], method=dist.meth.u)
 hclustres<-hclust(data.dist, method = hclust.meth.u)
 plot(hclustres)
 rect.hclust(hclustres,h=50)
+##reults of clustering
+surface.data.clust<-cbind(Cluster=cutree(hclustres,h=50),feature.cell.scale)
