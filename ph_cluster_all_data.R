@@ -30,12 +30,13 @@ hclust.meth.u<-hclust.meth[1]
 dist.meth.u<-dist.meth[1]
 ###################################performing clustering on control data set
 #calculating disctance matrix
-data.dist<-dist(grnd.truth.feat.scale[[3]][,simple.4], method=dist.meth.u)
+data.dist_con<-dist(grnd.truth.feat.scale[[3]][,simple.4], method=dist.meth.u)
 class.un<-grnd.truth.feat.scale[[3]][,"Class"]
-hclustres_con<-hclust(data.dist, method = hclust.meth.u)
+hclustres_con<-hclust(data.dist_con, method = hclust.meth.u)
 plot(hclustres_con)
 rect.hclust(hclustres_con,k=5)
 clusters_con<-cutree(hclustres_con,5)
+con.data.clust<-cbind(Cluster=cutree(hclustres_con,k=5),grnd.truth.feat.scale[[3]])
 accur_mes_con<-table(clusters_con,class.un)
 max.col<-0
 accur_mes_con
@@ -71,12 +72,22 @@ clust.medoid = function(i, distmat, clusters) {
   }
 }
 
+##find medoids for all data set
 distmatclust<-as.matrix(data.dist)
-rownames(distmatclust)<-surface.data.clust[,2]
+rownames(distmatclust)<-feature.cell.scale[,"FeatureIdx"]
 
 clust.medoids<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(surface.data.clust$Cluster),
-clust.medoid, distmatclust, surface.data.clust)),Cluster=unique(surface.data.clust$Cluster)))
+  clust.medoid, distmatclust, surface.data.clust)),Cluster=unique(surface.data.clust$Cluster)))
+clust.medoids
 
 
+##find medoids for ground truth
+distmatclust_con<-as.matrix(data.dist_con)
+rownames(distmatclust_con)<-grnd.truth.feat.scale[[3]][,"FeatureIdx"]
 
-save(surface.data.clust,clust.medoids, file="Surface_clusters.Rdata")
+clust.medoids_con<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(con.data.clust$Cluster),
+clust.medoid, distmatclust_con, con.data.clust)),Cluster=unique(con.data.clust$Cluster)))
+clust.medoids_con
+
+
+save(surface.data.clust,clust.medoids_con,clust.medoids, file="Surface_clusters.Rdata")
