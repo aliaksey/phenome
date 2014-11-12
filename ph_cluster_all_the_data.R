@@ -28,17 +28,7 @@ hclust.meth<-c("ward.D","ward.D2", "single", "complete", "average", "mcquitty" ,
 dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski") #"canberra",
 hclust.meth.u<-hclust.meth[1]
 dist.meth.u<-dist.meth[1]
-#calculating disctance matrix
-data.dist<-dist(feature.cell.scale[,simple.4], method=dist.meth.u)
-#performing clustering
-hclustres<-hclust(data.dist, method = hclust.meth.u)
-plot(hclustres)
-rect.hclust(hclustres,k=10,)
-#########do the same for control####################
-#calculating disctance matrix
-data.dist<-dist(grnd.truth.feat.scale[[3]][,simple.4], method=dist.meth.u)
-class.un<-grnd.truth.feat.scale[[3]][,"Class"]
-#performing clustering
+#performing clustering on control data set
 hclustres_con<-hclust(data.dist, method = hclust.meth.u)
 plot(hclustres_con)
 rect.hclust(hclustres_con,k=5,)
@@ -55,6 +45,19 @@ for(k in 1:length(unique(class.un))){
 }
 accur<- as.numeric(max.col/sum(accur_mes_con))
 accur
+
+#performing clustering on all data set
+#calculating disctance matrix
+data.dist<-dist(feature.cell.scale[,simple.4], method=dist.meth.u)
+#performing clustering
+hclustres<-hclust(data.dist, method = hclust.meth.u)
+plot(hclustres)
+rect.hclust(hclustres,k=10,)
+#########do the same for control####################
+#calculating disctance matrix
+data.dist<-dist(grnd.truth.feat.scale[[3]][,simple.4], method=dist.meth.u)
+class.un<-grnd.truth.feat.scale[[3]][,"Class"]
+
 
 ########saving all clusters together##############
 
