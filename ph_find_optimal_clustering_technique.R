@@ -106,8 +106,8 @@ for(ih in 1:length(grnd.truth)){
         for(k in 1:length(unique(class.un))){
           max.column<-max(crop.matrix) 
           max.col<-max.col+max.column
-          mxind<-which(crop.matrix == max.column,arr.ind = T) 
-          if(length(mxind)==2) crop.matrix<-crop.matrix[-mxind[1],-mxind[2]] else break
+          mxind<-as.data.frame((which(crop.matrix == max.column,arr.ind = T)))
+          if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"uns.clusters"],-mxind[1,"class.un"]] else break
         }
         accur<- as.numeric(max.col/sum(accur_mes))
         ##saving all results
@@ -144,8 +144,8 @@ for(ih in 1:length(ground.truth.pca)){
         for(k in 1:length(unique(class.un))){
           max.column<-max(crop.matrix) 
           max.col<-max.col+max.column
-          mxind<-which(crop.matrix == max.column,arr.ind = T) 
-          if(length(mxind)==2) crop.matrix<-crop.matrix[-mxind[1],-mxind[2]] else break
+          mxind<-as.data.frame((which(crop.matrix == max.column,arr.ind = T)))
+          if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"uns.clusters"],-mxind[1,"class.un"]] else break
         }
         accur<- as.numeric(max.col/sum(accur_mes))
         ##saving all results
@@ -179,8 +179,8 @@ crop.matrix<-accur_mes
 for(k in 1:length(unique(class.un))){
   max.column<-max(crop.matrix) 
   max.col<-max.col+max.column
-  mxind<-which(crop.matrix == max.column,arr.ind = T) 
-  if(length(mxind)==2) crop.matrix<-crop.matrix[-mxind[1],-mxind[2]] else break
+  mxind<-as.data.frame((which(crop.matrix == max.column,arr.ind = T)))
+  if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"uns.clusters"],-mxind[1,"class.un"]] else break
 }
 accur<- as.numeric(max.col/sum(accur_mes))
 ##saving all results
@@ -211,7 +211,7 @@ for(ih in 1:length(ground.truth.pca)){
       max.column<-max(crop.matrix) 
       max.col<-max.col+max.column
       mxind<-as.data.frame((which(crop.matrix == max.column,arr.ind = T)))
-      if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"clusters_con"],-mxind[1,"class.un"]] else break
+      if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"uns.clusters"],-mxind[1,"class.un"]] else break
     }
     accur<- as.numeric(max.col/sum(accur_mes))
     ##saving all results
@@ -228,7 +228,7 @@ clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
 tail(clust_accur_results, n=1000L)
 plot(clust_accur_results$Accuracy)
 
-save(clust_accur_results, file="accuracy_of_unsupervised_method1_6.Rdata")
+save(clust_accur_results, file="accuracy_of_unsupervised_method1_7.Rdata")
 
 #load("accuracy_of_unsupervised_method.Rdata")
 
