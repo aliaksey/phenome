@@ -70,7 +70,7 @@ grnd.truth<-c(grnd.truth.feat.scale, grnd.truth.img.scale)
 names(grnd.truth)<-c("feature 1 %","feature 2 %","feature 3 %","image 1 %","image 2 %","image 3 %")
 #grnd.truth<-c(grnd.truth.temp,ground.truth.pca)
 ##setting names for clustering methods for hclust
-hclust.meth<-c("ward.D", "ward.D2", "single", "complete", "average", "mcquitty" , "median",  "centroid")
+hclust.meth<-c("ward.D","ward.D2", "single", "complete", "average", "mcquitty" , "median",  "centroid")
 ##setting metods for disstances hclust
 dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski") #"canberra",
 ########################### running loop######################################
@@ -210,8 +210,8 @@ for(ih in 1:length(ground.truth.pca)){
     for(k in 1:length(unique(class.un))){
       max.column<-max(crop.matrix) 
       max.col<-max.col+max.column
-      mxind<-which(crop.matrix == max.column,arr.ind = T) 
-      if(length(mxind)==2) crop.matrix<-crop.matrix[-mxind[1],-mxind[2]] else break
+      mxind<-as.data.frame((which(crop.matrix == max.column,arr.ind = T)))
+      if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"clusters_con"],-mxind[1,"class.un"]] else break
     }
     accur<- as.numeric(max.col/sum(accur_mes))
     ##saving all results
@@ -228,9 +228,9 @@ clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
 tail(clust_accur_results, n=1000L)
 plot(clust_accur_results$Accuracy)
 
-save(clust_accur_results, file="accuracy_of_unsupervised_method1_4.Rdata")
+save(clust_accur_results, file="accuracy_of_unsupervised_method1_6.Rdata")
 
-load("accuracy_of_unsupervised_method.Rdata")
+#load("accuracy_of_unsupervised_method.Rdata")
 
 #do.call(paste, expand.grid(simple.cellshape.name,1:10))
 #length(combn(simple.cellshape.name,3))
@@ -259,7 +259,7 @@ tail(average_accuracy_method, , n=10L)
 
 
 ##find out what best method on average for surface and image reagrding set of features and groundtruth set
-# average_accuracy_method2<-ddply(clust_accur_results, .(DistanceMethod, ClusterMethod), 
-#                                 summarise, Accmean=mean(Accuracy))
-# average_accuracy_method2<-average_accuracy_method2[order(average_accuracy_method2$Accmean),]
-# tail(average_accuracy_method2, , n=10L)
+average_accuracy_method2<-ddply(clust_accur_results, .(DistanceMethod, ClusterMethod), 
+                                summarise, Accmean=mean(Accuracy))
+average_accuracy_method2<-average_accuracy_method2[order(average_accuracy_method2$Accmean),]
+tail(average_accuracy_method2, , n=10L)
