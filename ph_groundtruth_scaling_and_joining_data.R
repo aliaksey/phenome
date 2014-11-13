@@ -46,5 +46,5 @@ feature.cell.scale<-cbind(FeatureIdx=feature.cell[, "FeatureIdx"],feature.cell.d
 grnd.truth.feat<-list(grnd_trth1.sf,grnd_trth2.sf,grnd_trth3.sf)
 grnd.truth.feat.scale <-lapply(grnd.truth.feat, function(x){merge(x, feature.cell.scale, by="FeatureIdx")})
 
-save(feature.cell.scale, grnd.truth.feat.scale, grnd.truth.img.scale, image.cell.scale, 
+save(feature.cell,feature.cell.scale, grnd.truth.feat.scale, grnd.truth.img.scale, image.cell.scale, 
      file="Cell all data & ground truth scaled.RData")
