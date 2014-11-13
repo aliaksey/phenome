@@ -82,8 +82,8 @@ average_accuracy_feature<-average_accuracy_feature[order(average_accuracy_featur
 tail(average_accuracy_feature, , n=10L)
 
 names.res[[1060]]
-names.res[[1871]]
-featuteres.to.check<-names.res[[1060]]
+
+featuteres.to.check<-names.res[[1871]]
 ###cheking results on confusing matrix
 data.dist.ch<-dist(grnd.truth.feat.scale[[3]][,featuteres.to.check], method="manhattan")
 hclustres.ch<-hclust(data.dist.ch, method = "ward.D")
