@@ -89,5 +89,5 @@ clust.medoids_con<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(con.d
                                                                     clust.medoid, distmatclust_con, con.data.clust)),Cluster=unique(con.data.clust$Cluster)))
 clust.medoids_con
 
-save(surface.data.clust,clust.medoids_con,
+save(surface.data.clust,con.data.clust,clust.medoids_con,
      clust.medoids,data.dist_con,data.dist, file="Surface_clusters.Rdata")
