@@ -2,6 +2,9 @@
 ph_validation_medoids("all data each cluster max different ",clust.medoids)
 ph_validation_medoids("ground truth each cluster max different",clust.medoids_con)
 ph_validation_medoids("try diffrent approch to find surface max differ",sel.surf)
+ph_validation_medoids("outliers in mahalanobis space",outliers.to.plot)
+ph_validation_medoids("medoids of clustered moutliers 10 clusters",clust.medoids.mo)
+
 
 ph_validation_medoids<-function(name, medoids)
 {

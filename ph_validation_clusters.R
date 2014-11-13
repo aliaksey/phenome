@@ -1,5 +1,6 @@
 
-ph_validation_clusters("clusters ground truth",con.data.clust)
+ph_validation_clusters("clusters all data 2",surface.data.clust)
+ph_validation_clusters("clusters all data Moutliers",surface.data.clust.mo)
 
 ph_validation_clusters<-function(name, cluster.data)
 {

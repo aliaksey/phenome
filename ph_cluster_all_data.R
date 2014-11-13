@@ -88,6 +88,26 @@ rownames(distmatclust_con)<-grnd.truth.feat.scale[[3]][,"FeatureIdx"]
 clust.medoids_con<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(con.data.clust$Cluster),
                                                                     clust.medoid, distmatclust_con, con.data.clust)),Cluster=unique(con.data.clust$Cluster)))
 clust.medoids_con
+##################cluster outliers in mahalanobis
+load("Surface_Outliers_in_Mahalanobis.RData")
+#calculating disctance matrix
+data.dist.mo<-dist(feature.cell.scale[feature.cell.scale$FeatureIdx%in%surface.outliers$FeatureIdx,
+                                      simple.4], method=dist.meth.u)
+#performing clustering
+hclustres.mo<-hclust(data.dist.mo, method = hclust.meth.u)
+plot(hclustres.mo)
+rect.hclust(hclustres.mo,k=10)
+surface.data.clust.mo<-cbind(Cluster=cutree(hclustres.mo,k=10),
+                             feature.cell.scale[feature.cell.scale$FeatureIdx%in%surface.outliers$FeatureIdx,])
+##find medoids for outlier data set
+distmatclust.mo<-as.matrix(data.dist.mo)
+rownames(distmatclust.mo)<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%surface.outliers$FeatureIdx,"FeatureIdx"]
 
-save(surface.data.clust,con.data.clust,clust.medoids_con,
+clust.medoids.mo<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(surface.data.clust.mo$Cluster),
+                                                                   clust.medoid, distmatclust.mo, surface.data.clust.mo)),Cluster=unique(surface.data.clust.mo$Cluster)))
+clust.medoids.mo
+
+save(surface.data.clust,con.data.clust,clust.medoids_con,clust.medoids.mo,surface.data.clust.mo,
      clust.medoids,data.dist_con,data.dist, file="Surface_clusters.Rdata")
+
+

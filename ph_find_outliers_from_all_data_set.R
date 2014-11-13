@@ -19,7 +19,8 @@ simple.name<-all.names.temp[grepl("Cells_AreaShape", all.names.temp)
 dt.outlrs<-feature.cell[,simple.name]
 rownames(dt.outlrs)<-feature.cell[,"FeatureIdx"]
 mdres<-Moutlier(dt.outlrs, quantile = 0.99, plot = T)
-rsltmd<-dt.outlrs[mdres$rd < mdres$cutoff,]
-features.outliers<-names(rsltmd)
-outliers.to.plot<-cbind(features.outliers,seq(1:lenght(features.outliers)))
-colnames(outliers.to.plot)<-c("FeatureIdx", "Cluster")
+rsltmd<-dt.outlrs[mdres$rd > mdres$cutoff,]
+features.outliers<-rownames(rsltmd)
+surface.outliers<-as.data.frame(cbind(features.outliers,seq(1:length(features.outliers))))
+colnames(surface.outliers)<-c("FeatureIdx", "Cluster")
+save(surface.outliers, file="Surface_Outliers_in_Mahalanobis.RData")
