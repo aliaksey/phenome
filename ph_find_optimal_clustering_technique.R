@@ -5,6 +5,7 @@ require("ggplot2")
 #library("doParallel")
 library("caret")
 library("plyr")
+library("cluster")
 load("Cell all data & ground truth scaled.RData")
 load("model_selection_svm.RData")
 load("pca_results_for_ground_truth_and_all.RData")
@@ -66,13 +67,20 @@ for(kk in 1:length(selnames.temp)){
 selnames<-c(selnames.temp,selnames.corr.surf,selnames.corr.im)
 
 ## puttinh all ground truth data and pca data together
-grnd.truth<-c(grnd.truth.feat.scale, grnd.truth.img.scale)
-names(grnd.truth)<-c("feature 1 %","feature 2 %","feature 3 %","image 1 %","image 2 %","image 3 %")
+# grnd.truth<-c(grnd.truth.feat.scale, grnd.truth.img.scale)
+# names(grnd.truth)<-c("feature 1 %","feature 2 %","feature 3 %","image 1 %","image 2 %","image 3 %")
+grnd.truth<-c(grnd.truth.feat.scale)
+names(grnd.truth)<-c("feature 1 %","feature 2 %","feature 3 %")
+
 #grnd.truth<-c(grnd.truth.temp,ground.truth.pca)
 ##setting names for clustering methods for hclust
 hclust.meth<-c("ward.D","ward.D2", "single", "complete", "average", "mcquitty" , "median",  "centroid")
+agnes.meth<-c("ward", "single", "complete", "average", "weighted" )#, "flexible",  "gaverage")
+
 ##setting metods for disstances hclust
-dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski") #"canberra",
+dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski","canberra") 
+dist.meth.agnes<-c( "euclidean", "manhattan") 
+
 ########################### running loop######################################
 #setup parallel backend to use 8 processors
 #cl<-makeCluster(4)
@@ -111,7 +119,7 @@ for(ih in 1:length(grnd.truth)){
         }
         accur<- as.numeric(max.col/sum(accur_mes))
         ##saving all results
-        mthod_result<-cbind(names(grnd.truth[ih]),mthd.dist, mthd.cl, names(selnames[im]),accur)
+        mthod_result<-cbind(names(grnd.truth[ih]),mthd.dist, paste("Hclust-",mthd.cl), names(selnames[im]),accur)
         colnames(mthod_result)<-c("GroundTruth","DistanceMethod","ClusterMethod","FeatureNames","Accuracy")
         hclust_accr<-as.data.frame(rbind(hclust_accr, mthod_result))
       }
@@ -119,6 +127,80 @@ for(ih in 1:length(grnd.truth)){
   }
 }
 #stopCluster(cl)
+#####################calculating acuracy for agnes
+agnes_accr<-c()
+for(ih in 1:length(grnd.truth)){
+  data.cl<-grnd.truth[[ih]]
+  #selecting different set of features  
+  for(im in 1:length(selnames)){  
+    feat.sel<-selnames[[im]]
+    class.un<-data.cl[,"Class"]
+    data.for.clust<-data.cl[,feat.sel]
+    #calculating distance matrix 
+    for(ij in 1:length(dist.meth.agnes)){
+      mthd.dist<-dist.meth.agnes[ij] 
+      data.dist<-dist(data.for.clust, method=mthd.dist)
+      #performing clustering
+      for(ik in 1:length(agnes.meth)){
+        mthd.cl<-agnes.meth[ik]
+        hclustres<-agnes(data.dist,diss=T,metric=mthd.dist,stand=T, method = mthd.cl)
+        uns.clusters<-cutree(hclustres,length(unique(class.un)))
+        accur_mes<-table(uns.clusters, class.un)
+        ## calculating accuracy
+        max.col<-0
+        crop.matrix<-accur_mes
+        for(k in 1:length(unique(class.un))){
+          max.column<-max(crop.matrix) 
+          max.col<-max.col+max.column
+          mxind<-as.data.frame((which(crop.matrix == max.column,arr.ind = T)))
+          if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"uns.clusters"],-mxind[1,"class.un"]] else break
+        }
+        accur<- as.numeric(max.col/sum(accur_mes))
+        ##saving all results
+        mthod_result<-cbind(names(grnd.truth[ih]),mthd.dist, paste("Agnes-",mthd.cl), names(selnames[im]),accur)
+        colnames(mthod_result)<-c("GroundTruth","DistanceMethod","ClusterMethod","FeatureNames","Accuracy")
+        agnes_accr<-as.data.frame(rbind(agnes_accr, mthod_result))
+      }
+    }
+  }
+}
+#####################calculating acuracy for diana
+diana_accr<-c()
+for(ih in 1:length(grnd.truth)){
+  data.cl<-grnd.truth[[ih]]
+  #selecting different set of features  
+  for(im in 1:length(selnames)){  
+    feat.sel<-selnames[[im]]
+    class.un<-data.cl[,"Class"]
+    data.for.clust<-data.cl[,feat.sel]
+    #calculating distance matrix 
+    for(ij in 1:length(dist.meth.agnes)){
+      mthd.dist<-dist.meth.agnes[ij] 
+      data.dist<-dist(data.for.clust, method=mthd.dist)
+      #performing clustering
+      
+        mthd.cl<-agnes.meth[ik]
+        hclustres<-diana(data.dist,diss=T,metric=mthd.dist,stand=T)
+        uns.clusters<-cutree(hclustres,length(unique(class.un)))
+        accur_mes<-table(uns.clusters, class.un)
+        ## calculating accuracy
+        max.col<-0
+        crop.matrix<-accur_mes
+        for(k in 1:length(unique(class.un))){
+          max.column<-max(crop.matrix) 
+          max.col<-max.col+max.column
+          mxind<-as.data.frame((which(crop.matrix == max.column,arr.ind = T)))
+          if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"uns.clusters"],-mxind[1,"class.un"]] else break
+        }
+        accur<- as.numeric(max.col/sum(accur_mes))
+        ##saving all results
+        mthod_result<-cbind(names(grnd.truth[ih]),mthd.dist, paste("Diana-",mthd.cl), names(selnames[im]),accur)
+        colnames(mthod_result)<-c("GroundTruth","DistanceMethod","ClusterMethod","FeatureNames","Accuracy")
+        diana_accr<-as.data.frame(rbind(diana_accr, mthod_result))
+      
+    }
+  }
+}
 ############################calculating accuracy for PCA###########################
 hclust_accr_pca<-c()
 for(ih in 1:length(ground.truth.pca)){
@@ -221,14 +303,15 @@ for(ih in 1:length(ground.truth.pca)){
   }
 }
 ##################all results######################
-clust_accur_results<-rbind(hclust_accr,kmean_accr, hclust_accr_pca,kmean_accr_pca)
+clust_accur_results<-rbind(hclust_accr,kmean_accr,agnes_accr,diana_accr,
+                           hclust_accr_pca,kmean_accr_pca)
 clust_accur_results <- data.frame(lapply(clust_accur_results, as.character), stringsAsFactors=FALSE)
 clust_accur_results$Accuracy<-as.numeric(clust_accur_results$Accuracy)
 clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
 tail(clust_accur_results, n=1000L)
 plot(clust_accur_results$Accuracy)
 
-save(clust_accur_results, file="accuracy_of_unsupervised_method1_7.Rdata")
+save(clust_accur_results, file="accuracy_of_unsupervised_method_5_0.Rdata")
 
 #load("accuracy_of_unsupervised_method.Rdata")
 
