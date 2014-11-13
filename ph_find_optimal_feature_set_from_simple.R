@@ -21,9 +21,12 @@ for(i in 1:length(simple.name)){
  names.res.temp<-combn(simple.name,i, simplify=F)
 if(!exists("names.res"))names.res=names.res.temp else names.res=c(names.res,names.res.temp)
 }
-hclust.meth<-c("ward.D","ward.D2", "single", "complete", "average", "mcquitty" , "median",  "centroid")
+#hclust.meth<-c("ward.D","ward.D2", "single", "complete", "average", "mcquitty" , "median",  "centroid")
+hclust.meth<-c("ward.D","ward.D2")
+
 ##setting metods for disstances hclust
-dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski")
+#dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski")
+dist.meth<-c( "euclidean", "manhattan")
 ## find max accuracy
 feat_clust_accr<-c()
 for(ih in 1:length(grnd.truth.feat.scale)){
@@ -71,3 +74,20 @@ tail(feat_clust_accr, n=1000L)
 plot(feat_clust_accr$Accuracy)
 
 save(feat_clust_accr, file="most_optimal_set_of_features.Rdata")
+##explorating 
+library(plyr)
+average_accuracy_feature<-ddply(feat_clust_accr, .(DistanceMethod, ClusterMethod,FeatureNames), 
+                                summarise, Accmean=mean(Accuracy))
+average_accuracy_feature<-average_accuracy_feature[order(average_accuracy_feature$Accmean),]
+tail(average_accuracy_feature, , n=10L)
+
+names.res[[1060]]
+names.res[[1871]]
+featuteres.to.check<-names.res[[1060]]
+###cheking results on confusing matrix
+data.dist.ch<-dist(grnd.truth.feat.scale[[3]][,featuteres.to.check], method="manhattan")
+hclustres.ch<-hclust(data.dist.ch, method = "ward.D")
+plot(hclustres.ch)
+rect.hclust(hclustres.ch, k=5)
+uns.clusters<-cutree(hclustres,length(unique(class.un)))
+table(uns.clusters, grnd.truth.feat.scale[[3]][,"Class"])     
