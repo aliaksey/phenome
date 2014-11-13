@@ -77,7 +77,7 @@ distmatclust<-as.matrix(data.dist)
 rownames(distmatclust)<-feature.cell.scale[,"FeatureIdx"]
 
 clust.medoids<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(surface.data.clust$Cluster),
-  clust.medoid, distmatclust, surface.data.clust)),Cluster=unique(surface.data.clust$Cluster)))
+                                                                clust.medoid, distmatclust, surface.data.clust)),Cluster=unique(surface.data.clust$Cluster)))
 clust.medoids
 
 
@@ -86,8 +86,8 @@ distmatclust_con<-as.matrix(data.dist_con)
 rownames(distmatclust_con)<-grnd.truth.feat.scale[[3]][,"FeatureIdx"]
 
 clust.medoids_con<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(con.data.clust$Cluster),
-clust.medoid, distmatclust_con, con.data.clust)),Cluster=unique(con.data.clust$Cluster)))
+                                                                    clust.medoid, distmatclust_con, con.data.clust)),Cluster=unique(con.data.clust$Cluster)))
 clust.medoids_con
 
-
-save(surface.data.clust,clust.medoids_con,clust.medoids, file="Surface_clusters.Rdata")
+save(surface.data.clust,clust.medoids_con,
+     clust.medoids,data.dist_con,data.dist, file="Surface_clusters.Rdata")
