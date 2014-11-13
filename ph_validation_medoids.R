@@ -1,7 +1,7 @@
 
-ph_validation_medoids("Medoids test ",clust.medoids)
-ph_validation_medoids("Medoids ground truth ",clust.medoids)
-ph_validation_medoids("Medoids ground truth2 ",clust.medoids_con)
+ph_validation_medoids("all data each cluster max different ",clust.medoids)
+ph_validation_medoids("ground truth each cluster max different",clust.medoids_con)
+ph_validation_medoids("try diffrent approch to find surface max differ",sel.surf)
 
 ph_validation_medoids<-function(name, medoids)
 {
