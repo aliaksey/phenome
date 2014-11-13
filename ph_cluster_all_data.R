@@ -1,4 +1,5 @@
 rm(list=ls())
+library(caret)
 load("Cell all data & ground truth scaled.RData")
 ## selecting features
 all.names.temp<-names(image.cell.scale)
@@ -28,7 +29,25 @@ hclust.meth<-c("ward.D","ward.D2", "single", "complete", "average", "mcquitty" ,
 dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski") #"canberra",
 hclust.meth.u<-hclust.meth[1]
 dist.meth.u<-dist.meth[1]
+##############################filter correlated surfaces
+row.names(feature.cell.scale)<-feature.cell.scale$FeatureIdx
+Corr.surf.cl <- cor(as.matrix(t(feature.cell.scale[,simple.4])))
+highCorr.surf.cl <- findCorrelation( Corr.surf.cl, 0.9)
+feature_to_analisis <- feature.cell.scale[- highCorr.surf.cl,simple.4]
 ###################################performing clustering on control data set
+#to.dist.cl<-feature.cell.scale[,simple.4]
+to.dist.cl<-feature_to_analisis
+
+#performing clustering on all data set
+#calculating disctance matrix
+data.dist<-dist(to.dist.cl, method=dist.meth.u)
+#performing clustering
+hclustres<-hclust(data.dist, method = hclust.meth.u)
+plot(hclustres)
+rect.hclust(hclustres,k=15)
+##results of clustering
+surface.data.clust<-cbind(Cluster=cutree(hclustres,k=15),feature.cell.scale[-highCorr.surf.cl,])
+###############performing clustering of ground truth data
 #calculating disctance matrix
 data.dist_con<-dist(grnd.truth.feat.scale[[3]][,simple.4], method=dist.meth.u)
 class.un<-grnd.truth.feat.scale[[3]][,"Class"]
@@ -49,17 +68,6 @@ for(k in 1:length(unique(class.un))){
 }
 accur<- as.numeric(max.col/sum(accur_mes_con))
 accur
-
-#performing clustering on all data set
-#calculating disctance matrix
-data.dist<-dist(feature.cell.scale[,simple.4], method=dist.meth.u)
-#performing clustering
-hclustres<-hclust(data.dist, method = hclust.meth.u)
-plot(hclustres)
-rect.hclust(hclustres,h=50)
-##reults of clustering
-surface.data.clust<-cbind(Cluster=cutree(hclustres,h=50),feature.cell.scale)
-
 ###finf medoids of cluster
 # function to find medoid in cluster 
 clust.medoid = function(i, distmat, clusters) {
@@ -68,7 +76,7 @@ clust.medoid = function(i, distmat, clusters) {
     names(which.min(rowSums(distmat[ind, ind] )))
     # c(min(rowMeans( distmat[ind, ind] )))
   }else{
-    collmor[ind,1]
+    clusters[ind,"FeatureIdx"]
   }
 }
 
