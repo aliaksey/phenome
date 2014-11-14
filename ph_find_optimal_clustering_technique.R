@@ -78,7 +78,7 @@ hclust.meth<-c("ward.D","ward.D2", "single", "complete", "average", "mcquitty" ,
 agnes.meth<-c("ward", "single", "complete", "average", "weighted" )#, "flexible",  "gaverage")
 
 ##setting metods for disstances hclust
-dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski","canberra") 
+dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski") #,"canberra"
 dist.meth.agnes<-c( "euclidean", "manhattan") 
 
 ########################### running loop######################################
