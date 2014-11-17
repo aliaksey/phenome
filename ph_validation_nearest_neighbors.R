@@ -1,4 +1,4 @@
-ph_validation_neighbors("6 clusters brute",nr.ngh)
+ph_validation_neighbors("19 clusters cr on simple 4, pearson",nr.ngh)
 
 ph_validation_neighbors<-function(name, neighbors.data)
 {
