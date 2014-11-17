@@ -31,9 +31,13 @@ hclust.meth.u<-hclust.meth[1]
 dist.meth.u<-dist.meth[1]
 ##############################filter correlated surfaces
 row.names(feature.cell.scale)<-feature.cell.scale$FeatureIdx
-Corr.surf.cl <- cor(as.matrix(t(feature.cell.scale[,simple.4])))
-highCorr.surf.cl <- findCorrelation( Corr.surf.cl, 0.9)
-feature_to_analisis <- feature.cell.scale[- highCorr.surf.cl,simple.4]
+Corr.surf.cl <- cor(as.matrix(t(feature.cell.scale[,simple.cellshape.name])),method="pearson")
+highCorr.surf.cl <- findCorrelation( Corr.surf.cl, 0.6)
+feature_to_analisis <- feature.cell.scale[- highCorr.surf.cl,simple.cellshape.name]
+nrow(feature_to_analisis)
+Medoidcorr<-as.data.frame(cbind(row.names(feature_to_analisis),seq(1:nrow(feature_to_analisis))))
+colnames(Medoidcorr)<-c("FeatureIdx",("Cluster"))
+Medoidcorr
 ###################################performing clustering on control data set
 #to.dist.cl<-feature.cell.scale[,simple.4]
 to.dist.cl<-feature_to_analisis
