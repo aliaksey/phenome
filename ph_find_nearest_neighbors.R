@@ -44,7 +44,7 @@ FeaatIdnotcorr
 rm("nr.ngh")
 for(ki in unique(FeaatIdnotcorr$FeatureIdx)){
  kind<-c(knnx.index(t(data.for.cor[,colnames(data.for.cor)!=ki]), 
-t(data.for.cor[,colnames(data.for.cor)==ki]), k=3,algorithm="brute"))
+t(data.for.cor[,colnames(data.for.cor)==ki]), k=3,algorithm="CR"))
 kind.m<-cbind(c(ki,kind), rep(ki,4))
  if(!exists("nr.ngh"))nr.ngh= kind.m else nr.ngh= rbind(nr.ngh,kind.m)
 }
