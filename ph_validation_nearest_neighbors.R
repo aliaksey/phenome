@@ -1,4 +1,4 @@
-ph_validation_neighbors("19 clusters cr on simple 4, pearson",nr.ngh)
+ph_validation_neighbors(" spearman p=0.7 all simple nearest neighbor by correlation matrix",nr.ngh)
 
 ph_validation_neighbors<-function(name, neighbors.data)
 {

@@ -1,10 +1,10 @@
 
-ph_validation_medoids("clustering aftre filtration correlted surfaces",clust.medoids)
+ph_validation_medoids("60 medois ward d2 manhattan simple wo Orientation",clust.medoids)
 ph_validation_medoids("ground truth each cluster max different",clust.medoids_con)
 ph_validation_medoids("try diffrent approch to find surface max differ",sel.surf)
 ph_validation_medoids("outliers in mahalanobis space",outliers.to.plot)
 ph_validation_medoids("medoids of clustered moutliers 10 clusters",clust.medoids.mo)
-ph_validation_medoids("12 default r=0.6 Clusters repres by correlation analaysis",FeaatIdnotcorr)
+ph_validation_medoids("82 spearman r=0.8 all simple cell shape names Clusters repres by correlation analaysis",FeaatIdnotcorr)
 
 
 

@@ -1,5 +1,5 @@
 
-ph_validation_clusters("after filtration of correlated surfaces",surface.data.clust)
+ph_validation_clusters("24 clusters all simple after filtration of correlated surfaces",surface.data.clust)
 ph_validation_clusters("clusters all data Moutliers",surface.data.clust.mo)
 
 ph_validation_clusters<-function(name, cluster.data)
