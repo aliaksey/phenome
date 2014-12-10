@@ -34,6 +34,6 @@ plot(cell.area$Cells_AreaShape_Perimeter~cell.area$Cells_AreaShape_Area, main="B
      xlab="Area",ylab="Perimeter")
 plot(cell.area.f$Cells_AreaShape_Perimeter~cell.area.f$Cells_AreaShape_Area, main="After Filter",
      xlab="Area",ylab="Perimeter")
-
+save(cell.area,cell.area.f,file="area_perimeter_plot.RData")
 save(cell.area.f,file="Cell_area_perim_corr.RData")
  
