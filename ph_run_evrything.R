@@ -1,4 +1,3 @@
-#start time
 strt<-Sys.time()
 #source("ph_load_raw_data.R")
 source("ph_filter_cell_density.R")
@@ -9,7 +8,13 @@ source("ph_scale_data.R")
 source("ph_create_ground_truth_data_set.R")
 source("ph_create_ground_truth_feature.R")
 source("ph_groundtruth_scaling_and_joining_data.R")
-source("ph_find_set_of_features_to_use_for_clustering.R")##can take a lot of hours, better load previous res
+#source("ph_find_set_of_features_to_use_for_clustering.R")##can take a lot of hours, better load previous res
 source("ph_groud_truth_pca.R")
 source("ph_find_optimal_clustering_technique.R")
+source("ph_cluster_all_data.R")
+# source("ph_cluster_representative_surfaces.R")
+# source("ph_find_outliers_from_all_data_set.R")
+# source("ph_make_plots.R")
+# source("ph_plot_map_of_ground_truth.R")
+# source("ph_")
 print(Sys.time()-strt)

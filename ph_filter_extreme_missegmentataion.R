@@ -27,5 +27,13 @@ for(i in unique(cell.area[,"FeatureIdx"])){
   cell.area.f<-rbind(cell.area.f,arpr.ftr) 
 }
 cell.area.f<-as.data.frame(cell.area.f)
+
+##making plots
+par(mfrow=c(1,2))
+plot(cell.area$Cells_AreaShape_Perimeter~cell.area$Cells_AreaShape_Area, main="Before Filter",
+     xlab="Area",ylab="Perimeter")
+plot(cell.area.f$Cells_AreaShape_Perimeter~cell.area.f$Cells_AreaShape_Area, main="After Filter",
+     xlab="Area",ylab="Perimeter")
+
 save(cell.area.f,file="Cell_area_perim_corr.RData")
  

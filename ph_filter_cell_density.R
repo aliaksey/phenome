@@ -17,5 +17,30 @@ for(i in unique(cell.density[,"FeatureIdx"])){
   cell.dns.f<-rbind(cell.dns.f,rsltc) 
 }
 cell.dns.f<-as.data.frame(cell.dns.f)
+
+#doing plots
+#for unfiltered data
+par(mfrow=c(2,2))
+library(plyr)
+data_for_hist<-ddply(cell.density, "FeatureIdx", summarise, 
+                     Image_Count_Cells = sum(Image_Count_Cells))
+
+hist(data_for_hist$Image_Count_Cells, breaks = 100,xlab = "Number of cells per surface",
+     main="Toatl cell number per surface")
+
+hist(cell.density$Image_Count_Cells, breaks = 100,xlab = "Number of cells per repeat",
+     main="Toatl cell number per repeat")
+#for filtered data
+library(plyr)
+data_for_hist_f<-ddply(cell.dns.f, "FeatureIdx", summarise, 
+                     Image_Count_Cells = sum(Image_Count_Cells))
+
+hist(data_for_hist_f$Image_Count_Cells, breaks = 100,xlab = "Number of cells per surface",
+     main="Total cell number per surface")
+
+hist(cell.dns.f$Image_Count_Cells, breaks = 100,xlab = "Number of cells per repeat",
+     main="Total cell number per repeat")
+
+
 save(cell.dns.f,file="Cell_dens_corr.RData")
  

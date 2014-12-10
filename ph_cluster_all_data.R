@@ -1,5 +1,6 @@
 rm(list=ls())
 library(caret)
+library(corrplot)
 load("Cell all data & ground truth scaled.RData")
 ## selecting features
 all.names.temp<-names(image.cell.scale)
@@ -116,6 +117,7 @@ clust.medoids.mo
 ##############################filter correlated surfaces
 row.names(feature.cell.scale)<-feature.cell.scale$FeatureIdx
 Corr.surf.cl <- cor(as.matrix(t(feature.cell.scale[,simple.cellshape.name])),method="pearson")
+corrplot(Corr.surf.cl)
 highCorr.surf.cl <- findCorrelation( Corr.surf.cl, 0.6)
 feature_to_analisis <- feature.cell.scale[- highCorr.surf.cl,simple.cellshape.name]
 nrow(feature_to_analisis)

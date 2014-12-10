@@ -308,13 +308,14 @@ clust_accur_results<-rbind(hclust_accr,kmean_accr,agnes_accr,diana_accr,
 clust_accur_results <- data.frame(lapply(clust_accur_results, as.character), stringsAsFactors=FALSE)
 clust_accur_results$Accuracy<-as.numeric(clust_accur_results$Accuracy)
 clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
-tail(clust_accur_results, n=1000L)
+tail(clust_accur_results, n=30L)
 plot(clust_accur_results$Accuracy)
 
-save(clust_accur_results, file="accuracy_of_unsupervised_method_5_0.Rdata")
+save(clust_accur_results, file="accuracy_of_unsupervised_method_6_0.Rdata")
 
-load("accuracy_of_unsupervised_method.Rdata")
-
+load("accuracy_of_unsupervised_method_5_0.Rdata")
+plot(clust_accur_results$Accuracy, main="Accuracy of clustering methods", ylab="Accuracy",
+     xlab="Index of Clustering method")
 #do.call(paste, expand.grid(simple.cellshape.name,1:10))
 #length(combn(simple.cellshape.name,3))
 
