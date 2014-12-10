@@ -41,6 +41,6 @@ hist(data_for_hist_f$Image_Count_Cells, breaks = 100,xlab = "Number of cells per
 hist(cell.dns.f$Image_Count_Cells, breaks = 100,xlab = "Number of cells per repeat",
      main="Total cell number per repeat")
 
-
+save(cell.density,cell.dns.f,file="cell_density_filter_plot.RData")
 save(cell.dns.f,file="Cell_dens_corr.RData")
  
