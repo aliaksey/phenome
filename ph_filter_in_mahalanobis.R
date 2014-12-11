@@ -42,11 +42,21 @@ corMatMy <- cor(datMyFiltered.scale)
 notcorrelatfeatures<-names(cell.shape.data[,-highlyCor])
 cell.shape.f<-c()
 for(i in unique(cell.shape[,"FeatureIdx"])){
+  options(warn=2)
   temp2<-cell.shape[cell.shape$FeatureIdx==i,]
-  mdres<-Moutlier(temp2[,notcorrelatfeatures], quantile = 0.99, plot = F)
+  if(length(temp2[,1])>12){
+  mdres<-Moutlier(temp2[,notcorrelatfeatures], quantile = 0.99, plot =F)
   rsltmd<-temp2[mdres$rd < mdres$cutoff,]
+  }else rsltmd=temp2
   cell.shape.f<-rbind(cell.shape.f,rsltmd)
   }
 cell.shape.f<-na.omit(cell.shape.f)
+save(cell.shape.f,cell.shape,file="mahalanobis_filtration_plot.RData")
 save(cell.shape.f,file="Cell_shape_corr.RData")
  
+dd<-cell.shape[cell.shape$FeatureIdx==2177,]
+length(unique(dd$ImageNumber))
+
+xs<-ddply(cell.shape,.(FeatureIdx),summarize, NumberRep=length(unique(ImageNumber)))
+summary(xs)
+max(xs$NumberRep)
