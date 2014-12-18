@@ -55,7 +55,7 @@ for(i in unique(cell.ftrs.f.scaled[,"FeatureIdx"])){
   #find highly correlated
   highlyCor <- findCorrelation(corfeat, 0.5)
   highlyCor.data <- cordata[highlyCor,]
-  #small chekoings
+  #small chekings
   corfeat[highlyCor,highlyCor]
   corfeat
   #corrplot(cor(t(highlyCor.data),method="spearman"))
@@ -64,9 +64,10 @@ for(i in unique(cell.ftrs.f.scaled[,"FeatureIdx"])){
   ## puting all data together
   #calculating some statistics per feature
   ratio.left<-length(highlyCor.data[,1])/length(cordata[,1])
-  avecor.temp<-corfeat[highlyCor,highlyCor]
+  avecor.temp<-cor(t(highlyCor.data), method="spearman")
+  #avecor.temp<-corfeat[highlyCor,highlyCor]
   avecor.temp[upper.tri(avecor.temp,diag=T)]<-NA
-  avecor<-median(avecor.temp, na.rm=T )
+  avecor<-mean(avecor.temp, na.rm=T, trimm=0.2) ##changed from median to mean as therea are few numbers
   repnumber.left<-length(highlyCor.data[,1])
   if( repnumber.left<2) next
   repnumber<-length(cordata[,1])
@@ -82,5 +83,5 @@ for(i in unique(cell.ftrs.f.scaled[,"FeatureIdx"])){
 #saving resuls
 statperfeat<-as.data.frame(statperfeat)
 cell.ftrs.reprod<-as.data.frame(cell.ftrs.reprod)
-
+save(statperfeat,cell.ftrs.reprod,cell.ftrs.f.scaled,file="reproducable_surfaces_plot.RData")
 save(statperfeat,cell.ftrs.reprod,file="Cell_image reprod.RData") 

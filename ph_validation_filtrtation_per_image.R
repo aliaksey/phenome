@@ -8,6 +8,9 @@ ph_filter_comparison_per_image("cell area perimeter validation 1 in min perimete
 ph_filter_comparison_per_image("cell density validation 461 max images re,oved ",cell.density,
                                cell.dns.f, 461)
 
+ph_filter_comparison_per_image("comparison reproducible repeats correlation corr=0.7 feat 345",cell.ftrs.f.scaled,
+                               cell.ftrs.reprod, 345)
+
 
 
 ph_filter_comparison_per_image<-function(name, beforefilter, afterfilter, feature)
