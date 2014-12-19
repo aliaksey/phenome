@@ -53,7 +53,7 @@ for(i in unique(cell.ftrs.f.scaled[,"FeatureIdx"])){
   corfeat[corfeat<0]<-0
   diag(corfeat)<-NA
   #find highly correlated
-  highlyCor <- findCorrelation(corfeat, 0.5)
+  highlyCor <- findCorrelation(corfeat, 0.9)
   highlyCor.data <- cordata[highlyCor,]
   #small chekings
   corfeat[highlyCor,highlyCor]

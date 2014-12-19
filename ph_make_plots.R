@@ -107,4 +107,45 @@ g8<-ggplot(statperfeat,aes(x=Ratio.left)) +
   labs(x="Ratio of cells left after filtration", y="Density",title ="Ratio of retained cells")
 
 grid.arrange(g5,g6,g7,g8,nrow=2, ncol=2)
-##proceed with PCA
+
+##plotting results of PCA
+load("PCA_results.RDATA")
+biplot(pca.results.all[[3]],var.axes = T, cex=0.2,arrow.len = 0,
+       xlabs=rep("O", nrow(feature.cell.scale)))
+library(rgl)
+plot3d(pca.results.gr[[1]]$x[,1:3],col = as.numeric(grnd.truth.feat.scale[[3]]$Class),size=5)
+plot3d(pca.results.gr.l[[1]]$x[,1:3],col = as.numeric(grnd.truth.feat.scale[[3]]$Class),size=5)
+plot(pca.results.gr[[1]]$x[,1],pca.results.gr[[1]]$x[,2],
+     col = as.numeric(grnd.truth.feat.scale[[3]]$Class),pch=20)
+plot(pca.results.gr.l[[3]]$x[,1],pca.results.gr.l[[3]]$x[,2],
+     col = as.numeric(grnd.truth.feat.scale[[3]]$Class),pch=20)
+
+
+plot3d(pca.results.all_l[[1]]$x[,1:3])
+
+plot(pca.results.all_l[[1]]$x[,1],pca.results.all_l[[1]]$x[,2])
+plot(pca.results.all[[1]]$x[,1],pca.results.all[[1]]$x[,2])
+
+
+# plot(pca.results.all[[1]])
+# summary(pca.results.all[[4]])
+# library(ggbiplot)
+# g <- ggbiplot(pca.results.all[[1]], choices = 1:2, scale=1, obs.scale = 0, var.scale = 1, varname.size=0.5,
+#               circle = T)
+# g <- g + scale_color_discrete(name = '')
+# g <- g + theme(legend.direction = 'horizontal', 
+#                legend.position = 'top')
+# print(g)
+
+#library(FactoMineR)
+#pca.results.all<-lapply(all.dat,function(x) PCA(x,scale.unit = FALSE,graph = FALSE))
+#loadings<-sweep(res$var$coord,2,sqrt(res$eig[1:5,1]),FUN="/")
+#plot(pca.results.all[[3]],cex=0.8,shadow=T, select="cos2 0.999",
+# unselect="grey70")
+# plot(res,cex=0.8,shadow=T,habillage = 13,invisible=c("ind.sup","quali"), select="cos2 0.7",
+#      unselect="grey70")
+# plot(res, choix="var", shadow=T, select="contrib 5")
+
+##putting evrything to a loop
+
+
