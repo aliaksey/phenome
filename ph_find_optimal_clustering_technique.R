@@ -9,6 +9,7 @@ library("cluster")
 load("Cell all data & ground truth scaled.RData")
 load("model_selection_svm.RData")
 load("pca_results_for_ground_truth_and_all.RData")
+load("PCA_results.RDATA")
 load("model_selection_rf.RData")
 # selecting cell names find by model simulation
 #svm
@@ -202,6 +203,7 @@ for(ih in 1:length(grnd.truth)){
   }
 }
 ############################calculating accuracy for PCA###########################
+ground.truth.pca<-c(ground.truth.pca, ground.truth.pca2)
 hclust_accr_pca<-c()
 for(ih in 1:length(ground.truth.pca)){
   data.cl<-ground.truth.pca[[ih]]
@@ -308,12 +310,12 @@ clust_accur_results<-rbind(hclust_accr,kmean_accr,agnes_accr,diana_accr,
 clust_accur_results <- data.frame(lapply(clust_accur_results, as.character), stringsAsFactors=FALSE)
 clust_accur_results$Accuracy<-as.numeric(clust_accur_results$Accuracy)
 clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
-tail(clust_accur_results, n=30L)
+tail(clust_accur_results, n=100L)
 plot(clust_accur_results$Accuracy)
 
 save(clust_accur_results, file="accuracy_of_unsupervised_method_6_0.Rdata")
 
-load("accuracy_of_unsupervised_method_5_0.Rdata")
+load("accuracy_of_unsupervised_method_6_0.Rdata")
 plot(clust_accur_results$Accuracy, main="Accuracy of clustering methods", ylab="Accuracy",
      xlab="Index of Clustering method")
 #do.call(paste, expand.grid(simple.cellshape.name,1:10))

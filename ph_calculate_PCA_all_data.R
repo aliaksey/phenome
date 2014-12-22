@@ -107,7 +107,6 @@ for(k in 1:length(all.dat_log)){
 
 ###pca of ground truth data
 ## create different set of gr fet with different names
-feature.cell.scale
 grtr.sc.dat.all<-grnd.truth.feat.scale[[3]][,mngfll.names.feat]
 grtr.sc.dat.cells<-grnd.truth.feat.scale[[3]][,mngfll.names.im.Cells]
 grtr.sc.dat.simple<-grnd.truth.feat.scale[[3]][,mngfll.names.im.Simple]
@@ -159,8 +158,10 @@ pca.results.gr.l<-lapply(all.dat.grtr.l,function(x) prcomp(x,center=F, scale=F))
 #   
 # }
 
+ground.truth.pca2<-c(ground.truth.pca.g,ground.truth.pca.g.l,pca.results.gr.l,pca.results.gr)
+
 save(pca.results.gr.l,pca.results.gr,pca.results.all,pca.results.all_l,
-     pca.results.gr.l, file="PCA_results.RDATA")
+     pca.results.gr.l, ground.truth.pca2,file="PCA_results.RDATA")
 
 
 #save(ground.truth.pca, pca.results.all, file="pca_results_for_ground_truth_and_all.RData")

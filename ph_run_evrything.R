@@ -10,6 +10,7 @@ source("ph_create_ground_truth_feature.R")
 source("ph_groundtruth_scaling_and_joining_data.R")
 #source("ph_find_set_of_features_to_use_for_clustering.R")##can take a lot of hours, better load previous res
 source("ph_groud_truth_pca.R")
+source("ph_calculate_PCA_all_data.R")
 source("ph_find_optimal_clustering_technique.R")
 source("ph_cluster_all_data.R")
 # source("ph_cluster_representative_surfaces.R")
