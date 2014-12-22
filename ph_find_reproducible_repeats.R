@@ -24,8 +24,9 @@ cell.ftrs.f.scaled<-merge(cell.ftrs.f.data.scaled, cell.ftrs.f[,c("ImageNumber",
 #calculating correlations
 statperfeat<-c()
 cell.ftrs.reprod<-c()
-tr=0.01
+
 findCorrelation3<- function(x,k) {
+  tr=0.01
   repeat {
     #x[x<k]<-NA
     #x.na.om<-x[,!apply(x, 2, function(x) all(is.na(x)))]
@@ -38,6 +39,8 @@ findCorrelation3<- function(x,k) {
   }
   return(rownames(corfeat.tr))
 }
+
+
 for(i in unique(cell.ftrs.f.scaled[,"FeatureIdx"])){
   xperfeat<-cell.ftrs.f.scaled[cell.ftrs.f.scaled$FeatureIdx==i,]
   
@@ -53,7 +56,7 @@ for(i in unique(cell.ftrs.f.scaled[,"FeatureIdx"])){
   corfeat[corfeat<0]<-0
   diag(corfeat)<-NA
   #find highly correlated
-  highlyCor <- findCorrelation(corfeat, 0.9)
+  highlyCor <- findCorrelation3(corfeat, 0.5)
   highlyCor.data <- cordata[highlyCor,]
   #small chekings
   corfeat[highlyCor,highlyCor]
