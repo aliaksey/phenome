@@ -27,12 +27,15 @@ cell.ftrs.reprod<-c()
 
 findCorrelation3<- function(x,k) {
   tr=0.01
+  kc=1
   repeat {
     #x[x<k]<-NA
     #x.na.om<-x[,!apply(x, 2, function(x) all(is.na(x)))]
-    avcor<-colMeans(x,na.rm = T)
-    corfeat.tr<-x[avcor>tr,avcor>tr]
+    if (kc==1) x.temp=x else x.temp=corfeat.tr
+    avcor<-colMeans(x.temp,na.rm = T)
+    corfeat.tr<-x.temp[avcor>tr,avcor>tr]
     tr<-tr+0.01
+    kc<-kc+1
     # exit if the condition is met
     if(length(corfeat.tr)<2) break
     if (tr >= k) break

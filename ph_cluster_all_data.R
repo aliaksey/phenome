@@ -29,21 +29,24 @@ hclust.meth<-c("ward.D","ward.D2", "single", "complete", "average", "mcquitty" ,
 ##setting metods for disstances hclust
 dist.meth<-c( "euclidean", "maximum", "manhattan",  "binary",  "minkowski") #"canberra",
 hclust.meth.u<-hclust.meth[2]
-dist.meth.u<-dist.meth[3]
+dist.meth.u<-dist.meth[1]
 
 ###################################performing clustering all data set
 #performing clustering on all data set
 # to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
-to.dist.cl<-feature.cell.scale[,simple.2]
+to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
 #to.dist.cl<-feature_to_analisis
 #calculating disctance matrix
 data.dist<-dist(to.dist.cl, method=dist.meth.u)
 #performing clustering
 hclustres<-hclust(data.dist, method = hclust.meth.u)
 plot(hclustres)
-rect.hclust(hclustres,k=55)
+rect.hclust(hclustres,k=50)
+##saving results of clustering
+clstrs<-cutree(hclustres,k=50)
+save(clstrs, data.dist, file="Clussters_and_distdata.RData")
 ##results of clustering
-surface.data.clust<-cbind(Cluster=cutree(hclustres,k=60),feature.cell.scale)
+surface.data.clust<-cbind(Cluster=cutree(hclustres,k=50),feature.cell.scale)
 
 ###finf medoids of cluster
 # function to find medoid in cluster 

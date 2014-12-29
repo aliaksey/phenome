@@ -349,3 +349,4 @@ average_accuracy_method2<-ddply(clust_accur_results, .(DistanceMethod, ClusterMe
                                 summarise, Accmean=mean(Accuracy))
 average_accuracy_method2<-average_accuracy_method2[order(average_accuracy_method2$Accmean),]
 tail(average_accuracy_method2, , n=10L)
+

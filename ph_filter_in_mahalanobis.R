@@ -45,7 +45,7 @@ for(i in unique(cell.shape[,"FeatureIdx"])){
   options(warn=2)
   temp2<-cell.shape[cell.shape$FeatureIdx==i,]
   if(length(temp2[,1])>12){
-  mdres<-Moutlier(temp2[,notcorrelatfeatures], quantile = 0.99, plot =T)
+  mdres<-Moutlier(temp2[,notcorrelatfeatures], quantile = 0.99, plot =F)
   rsltmd<-temp2[mdres$rd < mdres$cutoff,]
   }else rsltmd=temp2
   cell.shape.f<-rbind(cell.shape.f,rsltmd)

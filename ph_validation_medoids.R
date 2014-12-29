@@ -6,6 +6,8 @@ ph_validation_medoids("outliers in mahalanobis space",outliers.to.plot)
 ph_validation_medoids("medoids of clustered moutliers 10 clusters",clust.medoids.mo)
 ph_validation_medoids("82 spearman r=0.8 all simple cell shape names Clusters repres by correlation analaysis",FeaatIdnotcorr)
 
+ph_validation_medoids("50 medoids",clust.medoids)
+
 
 
 ph_validation_medoids<-function(name, medoids)
