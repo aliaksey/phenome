@@ -72,6 +72,14 @@ for (i in unique(clust_accur_results$ClusterMethod)){
 gr1<-ggplot(data=clust_accur_results.gr1, aes( x=Order,y=Accuracy,group = ClusterMethod,colour=ClusterMethod)) + 
 geom_line(lwd = 1)+labs(y="Acuuracy",x="Rank of the method",title ="Accuracy grouped by Clustering method")
 
+library(dplyr)
+D <- tbl_df(clust_accur_results.gr1)
+D1 <- D %>% filter(GroundTruth == "feature 3 %") %>% 
+  filter((DistanceMethod=="euclidean")|(ClusterMethod=="K-Means")) %>% 
+  group_by(ClusterMethod) %>% mutate(rank=order(Accuracy))
+p <- ggplot(D1, aes(rank, Accuracy, color=ClusterMethod)) + geom_line()
+ggsave("accuracy_comparison_gr1.pdf", width=8, height=5)
+
 #group2 based on grounf truth type
 clust_accur_results.gr2<-c()
 for (i in unique(clust_accur_results$GroundTruth)){
