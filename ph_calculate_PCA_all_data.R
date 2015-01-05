@@ -5,6 +5,7 @@ load("Cell all data & ground truth scaled.RData")
 ## selecting features meaningfull for shape measurement
 ##omiting rows with na
 all.names.temp.f<-names(feature.cell.scale)
+writeClipboard(all.names.temp.f)
 
 mngfll.names.feat<-all.names.temp.f[!grepl("ImageNumber", all.names.temp.f)&
                                       !grepl("FeatureIdx", all.names.temp.f)&

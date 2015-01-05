@@ -74,13 +74,21 @@ for(i in unique(cell.ftrs.f.scaled[,"FeatureIdx"])){
   #avecor.temp<-corfeat[highlyCor,highlyCor]
   avecor.temp[upper.tri(avecor.temp,diag=T)]<-NA
   avecor<-mean(avecor.temp, na.rm=T, trimm=0.2) ##changed from median to mean as therea are few numbers
+  
+  avecor2.temp<-cor(t(cordata), method="spearman")
+  #avecor.temp<-corfeat[highlyCor,highlyCor]
+  avecor2.temp[upper.tri(avecor2.temp,diag=T)]<-NA
+  avecor2<-mean(avecor2.temp, na.rm=T, trimm=0.2) ##changed from median to mean as therea are few numbers
+  
+  
   repnumber.left<-length(highlyCor.data[,1])
   if( repnumber.left<2) next
   repnumber<-length(cordata[,1])
   cellnumber.left<-length(xperfeat[xperfeat$ImageNumber%in%rownames(highlyCor.data),1])
   cellnumber<-length(xperfeat[,1])
   statperfeat.temp<-cbind(FeatureIdx=i,RepNumber=repnumber,RepNumber.left=repnumber.left,
-                      Ratio.left=ratio.left,Average.correl=avecor,CellNumber=cellnumber,
+                      Ratio.left=ratio.left,Average.correl=avecor,Average.correl.before=avecor2,
+                      CellNumber=cellnumber,
                       CellNumber.left=cellnumber.left)
   statperfeat<-rbind(statperfeat,statperfeat.temp)
   highlyCor.data.result<-cbind(FeatureIdx=i,ImageNumber=as.numeric(row.names(highlyCor.data)))
