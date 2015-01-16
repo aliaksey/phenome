@@ -31,6 +31,11 @@ ph_filter_correllation_per_image("comparison reproducible repeats correlation co
                                  cell.ftrs.reprod, 1918)
 ph_filter_correllation_per_image("comparison reproducible repeats correlation corr=0.5 feat 1407",cell.ftrs.f.scaled,
                                  cell.ftrs.reprod, 1407)
+for(i in unique(D$FeatureIdx)){
+  
+ph_filter_correllation_per_image(paste("show filtration",i,sep=" "),cell.ftrs.f.scaled,
+                                 cell.ftrs.reprod,i)
+}
 
 ph_filter_correllation_per_image<-function(name, beforefilter, afterfilter, feature)
 {

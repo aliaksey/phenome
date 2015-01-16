@@ -1,5 +1,15 @@
 ph_validation_neighbors(" spearman p=0.7 all simple nearest neighbor by correlation matrix",nr.ngh)
 
+ph_validation_neighbors("10nn from 12 clusters in PC",clust.6medoids)
+
+all=data.frame(Cluster=seq(1:2177),FeatureIdx=seq(1:2177))
+ph_validation_neighbors("all data",all)
+extrmn<-data.frame(FeatureIdx=c(1068,534,1307,1433,1241,2105,687,1530,1670,719,329,1641,2114,203,798,714,1759,541,1149,1087,495,
+                                2010,681,732,264,517,2007,630,928,2107,40),Cluster=seq(1:31))
+ph_validation_neighbors("extremes in PCA plot",extrmn)
+
+#load manuallly selected surfaces to assess how different they are:
+
 ph_validation_neighbors<-function(name, neighbors.data)
 {
   load("ph_raw_data.RData")
@@ -19,7 +29,7 @@ ph_validation_neighbors<-function(name, neighbors.data)
   formatspec_h1_n<-'<h1> <font color="red"> 666 </h1>' 
   formatspec_h2<-paste("<h2> Feature number ", name, "</h2>\r\n", sep="")   # specify feature number
   formatspec_links<-'<img src='
-  formatspec_h22<-'<h2> Centers '
+  formatspec_h22<-'<h2> Clusters '
   formatspec_h23<-'</h2>\r\n'
   formatspec_h24<-'<h2> Surface Nr '
   formatspec_h25<-'</h2>\r\n'
@@ -34,14 +44,14 @@ ph_validation_neighbors<-function(name, neighbors.data)
   cat(formatspec_,file = htmlfile, append=T)
   #=====
   ## write all
-  cat(paste(formatspec_h22,"Centers",formatspec_h23,sep=""),file = htmlfile, append=T)
+  cat(paste(formatspec_h22,"Clusters",formatspec_h23,sep=""),file = htmlfile, append=T)
   #create path info
   pathinfo<-image.data[image.data$ImageNumber%in%image.allftrs$ImageNumber,c("ImageNumber", "FeatureIdx",
                                                                              "Image_Metadata_FileName_Actin_w_array_name" )]
   ##iterate evrything by class
-  for  (cc in unique(neighbors.data$Center)){
+  for  (cc in unique(neighbors.data$Cluster)){
     cat(paste(formatspec_h22,cc,formatspec_h23,sep=""),file = htmlfile, append=T)
-    cluster.temp<-neighbors.data[neighbors.data$Center==cc,]
+    cluster.temp<-neighbors.data[neighbors.data$Cluster==cc,]
     #cluster.temp <- cluster.temp.t[sample(1:nrow(cluster.temp.t), 20, replace=T),] 
     tempp<-pathinfo[pathinfo$FeatureIdx %in% cluster.temp$FeatureIdx,]
     for  (ij in unique(cluster.temp$FeatureIdx)){

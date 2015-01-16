@@ -142,6 +142,7 @@ g004<-ggplot(data_for_hist_sf, aes(x=Image_Count_Cells)) +
 g4<-ggplot(cell.shape.f,aes(y=Cells_AreaShape_Compactness,x=Cells_AreaShape_Solidity)) + geom_point() + geom_density2d()+
   labs(x="Solidity",y="Compactness",title ="After Filter")
 grid.arrange(g003,g3,g004,g4,nrow=2, ncol=2)
+
 ## show numbr of replicates
 load("reproducable_surfaces_plot.RData")
 colnames(statperfeat)
@@ -155,14 +156,14 @@ g6<-ggplot(statperfeat,aes(x=RepNumber.left)) +
   labs(x="Number of repeats per surface", y="After Filter",title ="Repeats per surface reatined")
 g7<-ggplot(statperfeat,aes(x=Average.correl)) +  
   geom_histogram(aes(y=..density..), binwidth=0.05,colour="black", fill="white") +
-  geom_density(alpha=.2, fill="#6633CC")+
-  labs(x="Average correlatin per surface", y="Density",title ="Average correlation")
-g8<-ggplot(statperfeat,aes(x=Ratio.left)) +  
+  geom_density(alpha=.2, fill="#6633CC")+xlim(-0.2, 1)+
+  labs(x="Average correlatin per surface", y="Density",title ="Average correlation after filter")
+g8<-ggplot(statperfeat,aes(x=Average.correl.before)) +  
   geom_histogram(aes(y=..density..), binwidth=0.1,colour="black", fill="white") +
-  geom_density(alpha=.2, fill="#6633CC")+
-  labs(x="Ratio of cells left after filtration", y="Density",title ="Ratio of retained cells")
+  geom_density(alpha=.2, fill="#6633CC")+xlim(-0.2, 1)+
+  labs(x="Ratio of cells left after filtration", y="Density",title ="Average correlation before filter")
 
-grid.arrange(g5,g6,g7,g8,nrow=2, ncol=2)
+grid.arrange(g5,g6,g8,g7,nrow=2, ncol=2)
 
 ##plotting results of PCA
 load("PCA_results.RDATA")
@@ -188,7 +189,22 @@ plot(pca.results.all[[1]]$x[,1],pca.results.all[[1]]$x[,2])
 plot(pca.results.all[[2]]$x[,1],pca.results.all[[2]]$x[,2])
 plot(pca.results.all[[3]]$x[,1],pca.results.all[[3]]$x[,2])
 plot(pca.results.all[[4]]$x[,1],pca.results.all[[4]]$x[,2])
-
+##make plots of clusters in PCA
+par(mfrow=c(1,2))
+load("Surface_clusters.Rdata")
+plot(pca.results.all[[3]]$x[,1],pca.results.all[[3]]$x[,2],
+     col = as.numeric(surface.data.clust$Cluster),pch=20)
+#make the same plot but for selected medoids
+for_col_pca.m<-surface.data.clust[,c("Cluster", "FeatureIdx")]
+for_col_pca.m[!for_col_pca.m$FeatureIdx%in%clust.6medoids$FeatureIdx,"Cluster"]<-100000
+plot(pca.results.all[[3]]$x[,1],pca.results.all[[3]]$x[,2],
+     col = for_col_pca.m$Cluster,pch=20)
+plot(pca.results.all[[3]]$x[,1],pca.results.all[[3]]$x[,2],
+     col = for_col_pca.m$Cluster,pch=20)
+for_col_pca.m[!for_col_pca.m$FeatureIdx%in%clust.medoids$FeatureIdx,"Cluster"]<-100000
+plot(pca.results.all[[3]]$x[,1],pca.results.all[[3]]$x[,2],
+     col = for_col_pca.m$Cluster,pch=20)
+par(mfrow=c(1,1))
 #repeat the same for log transformed data
 #make biplot
 par(mfrow=c(2,2))

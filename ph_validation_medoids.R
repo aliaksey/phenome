@@ -8,6 +8,7 @@ ph_validation_medoids("82 spearman r=0.8 all simple cell shape names Clusters re
 
 ph_validation_medoids("50 medoids",clust.medoids)
 
+ph_validation_medoids("77 medoids PCA",clust.medoids)
 
 
 ph_validation_medoids<-function(name, medoids)

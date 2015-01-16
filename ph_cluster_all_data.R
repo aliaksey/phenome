@@ -2,6 +2,7 @@ rm(list=ls())
 library(caret)
 library(corrplot)
 load("Cell all data & ground truth scaled.RData")
+load("PCA_results.RDATA")
 ## selecting features
 all.names.temp<-names(image.cell.scale)
 
@@ -35,18 +36,21 @@ dist.meth.u<-dist.meth[1]
 #performing clustering on all data set
 # to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
 to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
+####to.dist.cl<-pca.results.all[[3]]$x[,1:2]############PCA is here!!!!!!!!
 #to.dist.cl<-feature_to_analisis
 #calculating disctance matrix
 data.dist<-dist(to.dist.cl, method=dist.meth.u)
 #performing clustering
 hclustres<-hclust(data.dist, method = hclust.meth.u)
 plot(hclustres)
-rect.hclust(hclustres,k=50)
+clust.numb<-34 ##specify number of clusters for selection
+#rect.hclust(hclustres,h=5)
+rect.hclust(hclustres,k=clust.numb)
 ##saving results of clustering
-clstrs<-cutree(hclustres,k=50)
+clstrs<-cutree(hclustres,k=clust.numb)
 save(clstrs, data.dist, file="Clussters_and_distdata.RData")
 ##results of clustering
-surface.data.clust<-cbind(Cluster=cutree(hclustres,k=50),feature.cell.scale)
+surface.data.clust<-cbind(Cluster=cutree(hclustres,k=clust.numb),feature.cell.scale)
 
 ###finf medoids of cluster
 # function to find medoid in cluster 
@@ -63,72 +67,91 @@ clust.medoid = function(i, distmat, clusters) {
 ##find medoids for all data set
 distmatclust<-as.matrix(data.dist)
 rownames(distmatclust)<-feature.cell.scale[,"FeatureIdx"]
+colnames(distmatclust)<-feature.cell.scale[,"FeatureIdx"]
 
 clust.medoids<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(surface.data.clust$Cluster),
-                                                                clust.medoid, distmatclust, surface.data.clust)),Cluster=unique(surface.data.clust$Cluster)))
+          clust.medoid, distmatclust, surface.data.clust)),Cluster=unique(surface.data.clust$Cluster)))
 clust.medoids
 
-
-###############performing clustering of ground truth data
-#calculating disctance matrix
-data.dist_con<-dist(grnd.truth.feat.scale[[3]][,simple.4], method=dist.meth.u)
-class.un<-grnd.truth.feat.scale[[3]][,"Class"]
-hclustres_con<-hclust(data.dist_con, method = hclust.meth.u)
-plot(hclustres_con)
-rect.hclust(hclustres_con,k=5)
-clusters_con<-cutree(hclustres_con,5)
-con.data.clust<-cbind(Cluster=cutree(hclustres_con,k=5),grnd.truth.feat.scale[[3]])
-accur_mes_con<-table(clusters_con,class.un)
-max.col<-0
-accur_mes_con
-crop.matrix<-accur_mes_con
-for(k in 1:length(unique(class.un))){
-  max.column<-max(crop.matrix) 
-  max.col<-max.col+max.column
-  mxind<-as.data.frame((which(crop.matrix == max.column,arr.ind = T)))
-  if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"clusters_con"],-mxind[1,"class.un"]] else break
+#find 5 nearest neighbors for medoid within clusters
+clust.6medoids<-c()
+f.res<-c()
+for(i in unique(clust.medoids$Cluster)){
+  ind = (surface.data.clust$Cluster == i)
+  temp.dist<-distmatclust[ind, ind]
+  temp.dist.med<-as.matrix(temp.dist[colnames(temp.dist)==clust.medoids[clust.medoids$Cluster==i,
+                                "FeatureIdx"]])
+  rownames(temp.dist.med)<-rownames(temp.dist)
+  if (length(temp.dist.med)<=10) res=rownames(temp.dist.med) else res=rownames(temp.dist.med)[order(temp.dist.med)][1:10]
+  f.res<-cbind(Cluster=as.numeric(i), FeatureIdx=as.numeric(res))
+  clust.6medoids<-rbind(clust.6medoids,f.res)
 }
-accur<- as.numeric(max.col/sum(accur_mes_con))
-accur
+clust.6medoids<-as.data.frame(clust.6medoids)
+clust.6medoids
 
-##find medoids for ground truth
-distmatclust_con<-as.matrix(data.dist_con)
-rownames(distmatclust_con)<-grnd.truth.feat.scale[[3]][,"FeatureIdx"]
-
-clust.medoids_con<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(con.data.clust$Cluster),
-                                                                    clust.medoid, distmatclust_con, con.data.clust)),Cluster=unique(con.data.clust$Cluster)))
-clust.medoids_con
-##################cluster outliers in mahalanobis
-load("Surface_Outliers_in_Mahalanobis.RData")
-#calculating disctance matrix
-data.dist.mo<-dist(feature.cell.scale[feature.cell.scale$FeatureIdx%in%surface.outliers$FeatureIdx,
-                                      simple.4], method=dist.meth.u)
-#performing clustering
-hclustres.mo<-hclust(data.dist.mo, method = hclust.meth.u)
-plot(hclustres.mo)
-rect.hclust(hclustres.mo,k=10)
-surface.data.clust.mo<-cbind(Cluster=cutree(hclustres.mo,k=10),
-                             feature.cell.scale[feature.cell.scale$FeatureIdx%in%surface.outliers$FeatureIdx,])
-##find medoids for outlier data set
-distmatclust.mo<-as.matrix(data.dist.mo)
-rownames(distmatclust.mo)<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%surface.outliers$FeatureIdx,"FeatureIdx"]
-
-clust.medoids.mo<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(surface.data.clust.mo$Cluster),
-                                                                   clust.medoid, distmatclust.mo, surface.data.clust.mo)),Cluster=unique(surface.data.clust.mo$Cluster)))
-clust.medoids.mo
-
-##############################filter correlated surfaces
-row.names(feature.cell.scale)<-feature.cell.scale$FeatureIdx
-Corr.surf.cl <- cor(as.matrix(t(feature.cell.scale[,simple.cellshape.name])),method="pearson")
-corrplot(Corr.surf.cl)
-highCorr.surf.cl <- findCorrelation( Corr.surf.cl, 0.6)
-feature_to_analisis <- feature.cell.scale[- highCorr.surf.cl,simple.cellshape.name]
-nrow(feature_to_analisis)
-Medoidcorr<-as.data.frame(cbind(row.names(feature_to_analisis),seq(1:nrow(feature_to_analisis))))
-colnames(Medoidcorr)<-c("FeatureIdx",("Cluster"))
-Medoidcorr
-
-save(surface.data.clust,con.data.clust,clust.medoids_con,clust.medoids.mo,surface.data.clust.mo,
-     clust.medoids,data.dist_con,data.dist, file="Surface_clusters.Rdata")
-
-
+save(surface.data.clust,clust.6medoids,clust.medoids,data.dist,distmatclust, file="Surface_clusters.Rdata")
+# 
+# 
+# ###############performing clustering of ground truth data
+# #calculating disctance matrix
+# data.dist_con<-dist(grnd.truth.feat.scale[[3]][,simple.4], method=dist.meth.u)
+# class.un<-grnd.truth.feat.scale[[3]][,"Class"]
+# hclustres_con<-hclust(data.dist_con, method = hclust.meth.u)
+# plot(hclustres_con)
+# rect.hclust(hclustres_con,k=5)
+# clusters_con<-cutree(hclustres_con,5)
+# con.data.clust<-cbind(Cluster=cutree(hclustres_con,k=5),grnd.truth.feat.scale[[3]])
+# accur_mes_con<-table(clusters_con,class.un)
+# max.col<-0
+# accur_mes_con
+# crop.matrix<-accur_mes_con
+# for(k in 1:length(unique(class.un))){
+#   max.column<-max(crop.matrix) 
+#   max.col<-max.col+max.column
+#   mxind<-as.data.frame((which(crop.matrix == max.column,arr.ind = T)))
+#   if(length(mxind)>1) crop.matrix<-crop.matrix[-mxind[1,"clusters_con"],-mxind[1,"class.un"]] else break
+# }
+# accur<- as.numeric(max.col/sum(accur_mes_con))
+# accur
+# 
+# ##find medoids for ground truth
+# distmatclust_con<-as.matrix(data.dist_con)
+# rownames(distmatclust_con)<-grnd.truth.feat.scale[[3]][,"FeatureIdx"]
+# 
+# clust.medoids_con<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(con.data.clust$Cluster),
+#                                                                     clust.medoid, distmatclust_con, con.data.clust)),Cluster=unique(con.data.clust$Cluster)))
+# clust.medoids_con
+# ##################cluster outliers in mahalanobis
+# load("Surface_Outliers_in_Mahalanobis.RData")
+# #calculating disctance matrix
+# data.dist.mo<-dist(feature.cell.scale[feature.cell.scale$FeatureIdx%in%surface.outliers$FeatureIdx,
+#                                       simple.4], method=dist.meth.u)
+# #performing clustering
+# hclustres.mo<-hclust(data.dist.mo, method = hclust.meth.u)
+# plot(hclustres.mo)
+# rect.hclust(hclustres.mo,k=10)
+# surface.data.clust.mo<-cbind(Cluster=cutree(hclustres.mo,k=10),
+#                              feature.cell.scale[feature.cell.scale$FeatureIdx%in%surface.outliers$FeatureIdx,])
+# ##find medoids for outlier data set
+# distmatclust.mo<-as.matrix(data.dist.mo)
+# rownames(distmatclust.mo)<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%surface.outliers$FeatureIdx,"FeatureIdx"]
+# 
+# clust.medoids.mo<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(surface.data.clust.mo$Cluster),
+#                                                                    clust.medoid, distmatclust.mo, surface.data.clust.mo)),Cluster=unique(surface.data.clust.mo$Cluster)))
+# clust.medoids.mo
+# 
+# ##############################filter correlated surfaces
+# row.names(feature.cell.scale)<-feature.cell.scale$FeatureIdx
+# Corr.surf.cl <- cor(as.matrix(t(feature.cell.scale[,simple.cellshape.name])),method="pearson")
+# corrplot(Corr.surf.cl)
+# highCorr.surf.cl <- findCorrelation( Corr.surf.cl, 0.6)
+# feature_to_analisis <- feature.cell.scale[- highCorr.surf.cl,simple.cellshape.name]
+# nrow(feature_to_analisis)
+# Medoidcorr<-as.data.frame(cbind(row.names(feature_to_analisis),seq(1:nrow(feature_to_analisis))))
+# colnames(Medoidcorr)<-c("FeatureIdx",("Cluster"))
+# Medoidcorr
+# 
+# save(surface.data.clust,con.data.clust,clust.medoids_con,clust.medoids.mo,surface.data.clust.mo,
+#      clust.medoids,data.dist_con,data.dist, file="Surface_clusters.Rdata")
+# 
+# 
