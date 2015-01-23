@@ -35,15 +35,15 @@ dist.meth.u<-dist.meth[1]
 ###################################performing clustering all data set
 #performing clustering on all data set
 # to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
-to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
-####to.dist.cl<-pca.results.all[[3]]$x[,1:2]############PCA is here!!!!!!!!
+##to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
+to.dist.cl<-pca.results.all[[3]]$x[,1:3]############PCA is here!!!!!!!!
 #to.dist.cl<-feature_to_analisis
 #calculating disctance matrix
 data.dist<-dist(to.dist.cl, method=dist.meth.u)
 #performing clustering
 hclustres<-hclust(data.dist, method = hclust.meth.u)
 plot(hclustres)
-clust.numb<-34 ##specify number of clusters for selection
+clust.numb<-28 ##specify number of clusters for selection
 #rect.hclust(hclustres,h=5)
 rect.hclust(hclustres,k=clust.numb)
 ##saving results of clustering

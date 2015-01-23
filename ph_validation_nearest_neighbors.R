@@ -1,6 +1,6 @@
 ph_validation_neighbors(" spearman p=0.7 all simple nearest neighbor by correlation matrix",nr.ngh)
 
-ph_validation_neighbors("10nn from 12 clusters in PC",clust.6medoids)
+ph_validation_neighbors("28 clusters ward2 on PCA3",clust.6medoids)
 
 all=data.frame(Cluster=seq(1:2177),FeatureIdx=seq(1:2177))
 ph_validation_neighbors("all data",all)
@@ -9,6 +9,11 @@ extrmn<-data.frame(FeatureIdx=c(1068,534,1307,1433,1241,2105,687,1530,1670,719,3
 ph_validation_neighbors("extremes in PCA plot",extrmn)
 
 #load manuallly selected surfaces to assess how different they are:
+fetbas<-read.csv2("medians_manual_selection.csv")
+pcabas<-read.csv2("medians pca manual selection.csv")
+ph_validation_neighbors("manual selection pca based",pcabas)
+
+
 
 ph_validation_neighbors<-function(name, neighbors.data)
 {
