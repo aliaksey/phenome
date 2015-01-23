@@ -47,16 +47,18 @@ corfeat[corfeat<0]<-0
 # diag(corfeat)<-NA
 #find highly correlated
 highlyCor <- findCorrelation(corfeat, 0.95)
-nonCor.data <- fi.cor[-highlyCor,][1:100,]
-highlyCor.data <- fi.cor[highlyCor,][1:100,]
-summary(colMeans(corfeat[-highlyCor,-highlyCor]))
-#small chekings
-corrplot(cor(t(nonCor.data),method="spearman"))
-corrplot(cor(t(highlyCor.data2),method="spearman"))
+# nonCor.data <- fi.cor[!rownames(fi.cor)%in%highlyCor,]
+# highlyCor.data <- fi.cor[rownames(fi.cor)%in%highlyCor,]
+nonCor.data <- fi.cor[-highlyCor,]
+highlyCor.data <- fi.cor[highlyCor,]
 
-noncorrelted_surf<-as.data.frame(cbind(FeatureIdx=as.numeric(rownames(highlyCor.data)),
-                         Cluster=seq(1:nrow(highlyCor.data))))
+#corrplots
+corrplot(cor(t(nonCor.data[1:100,]),method="spearman"))
+corrplot(cor(t(highlyCor.data[1:100,]),method="spearman"))
+
+# noncorrelted_surf<-as.data.frame(cbind(FeatureIdx=as.numeric(rownames(highlyCor.data)),
+#                          Cluster=seq(1:nrow(highlyCor.data))))
 
 #saving resuls
-non_cor_feat_data<-as.data.frame(nonCor.data)
-save(non_cor_feat_data,file="non correlated surfaces.RData")
+non_cor_feat_data<-as.data.frame(cbind(FeatureIdx=as.numeric(rownames(nonCor.data)),nonCor.data))
+save(non_cor_feat_data,file="non_correlated_surfaces.RData")

@@ -2,6 +2,11 @@ rm(list=ls())
 
 ##loading data
 load("Cell all data & ground truth scaled.RData")
+load("non_correlated_surfaces.RData")
+##selecting only features that passed non correlation test
+feature.cell.scale<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%non_cor_feat_data$FeatureIdx,]
+feature.cell.scale_log<-feature.cell.scale_log[feature.cell.scale_log$FeatureIdx%in%rownames(non_cor_feat_data),]
+
 ## selecting features meaningfull for shape measurement
 ##omiting rows with na
 all.names.temp.f<-names(feature.cell.scale)

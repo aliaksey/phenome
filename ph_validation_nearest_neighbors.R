@@ -1,6 +1,6 @@
 ph_validation_neighbors(" spearman p=0.7 all simple nearest neighbor by correlation matrix",nr.ngh)
 
-ph_validation_neighbors("28 clusters ward2 on PCA3",clust.6medoids)
+ph_validation_neighbors("28 clusters ward2 11 fetures after noncorrela removal",clust.6medoids)
 
 all=data.frame(Cluster=seq(1:2177),FeatureIdx=seq(1:2177))
 ph_validation_neighbors("all data",all)
