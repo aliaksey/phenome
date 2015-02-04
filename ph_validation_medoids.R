@@ -6,9 +6,22 @@ ph_validation_medoids("outliers in mahalanobis space",outliers.to.plot)
 ph_validation_medoids("medoids of clustered moutliers 10 clusters",clust.medoids.mo)
 ph_validation_medoids("82 spearman r=0.8 all simple cell shape names Clusters repres by correlation analaysis",FeaatIdnotcorr)
 
-ph_validation_medoids("50 medoids",clust.medoids)
+ph_validation_medoids("28 medoids after fixation simple pc3 non correla medoids",clust.medoids)
 
-ph_validation_medoids("14 medoids after selection",clust.medoids)
+ph_validation_medoids("final oo2 28 medoids on 6 PC scores ",clust.medoids)
+
+#load manuallly selected surfaces to assess how different they are:
+redpcamed<-read.csv2("medians manual PCA2 redundant.csv")
+
+ph_validation_medoids("redundant 28 clusters  75 medoids after noise reduction based on noncorrelatfeat on PCA2",redpcamed)
+
+redpcamed<-read.csv2("medians selection/4rd_step.csv")
+
+ph_validation_medoids("4rth step unique surfaces selection",redpcamed)
+##otliers in PCA plot
+outliers_pca<-data.frame(FeatureIdx=c(2073,457,1683,367,856,210,2124,117,1310,840,1110,219,
+                1015,1927,1991,888,2069,1642,1437,1273,32,1802,1679,73,1532,894,631,134),Cluster=seq(1:28))
+ph_validation_medoids("28 outliers from pca biplot",outliers_pca)
 
 
 ph_validation_medoids<-function(name, medoids)

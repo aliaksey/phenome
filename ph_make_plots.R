@@ -168,32 +168,46 @@ grid.arrange(g5,g6,g8,g7,nrow=2, ncol=2)
 ##plotting results of PCA
 load("PCA_results.RDATA")
 #make biplot
-par(mfrow=c(2,2))
-biplot(pca.results.all[[1]],var.axes = T, cex=0.2,arrow.len = 0,
-       xlabs=rep("O", nrow(pca.results.all[[3]]$x)))
-biplot(pca.results.all[[2]],var.axes = T, cex=0.2,arrow.len = 0,
-       xlabs=rep("O", nrow(pca.results.all[[3]]$x)))
+# par(mfrow=c(2,2))
+# biplot(pca.results.all[[1]],var.axes = T, cex=0.2,arrow.len = 0,
+#        xlabs=rep("O", nrow(pca.results.all[[3]]$x)))
+# biplot(pca.results.all[[2]],var.axes = T, cex=0.2,arrow.len = 0,
+#        xlabs=rep("O", nrow(pca.results.all[[3]]$x)))
 biplot(pca.results.all[[3]],var.axes = T, cex=0.2,arrow.len = 0,
        xlabs=rep("O", nrow(pca.results.all[[3]]$x)))
-biplot(pca.results.all[[4]],var.axes = T, cex=0.2,arrow.len = 0,
-       xlabs=rep("O", nrow(pca.results.all[[3]]$x)))
-par(mfrow=c(2,2))
+biplot(pca.results.all[[3]])
+# biplot(pca.results.all[[4]],var.axes = T, cex=0.2,arrow.len = 0,
+#        xlabs=rep("O", nrow(pca.results.all[[3]]$x)))
+# par(mfrow=c(2,2))
 #make var per pc plot
-plot(pca.results.all[[1]])
-plot(pca.results.all[[2]])
+# plot(pca.results.all[[1]])
+# plot(pca.results.all[[2]])
+# plot(pca.results.all[[3]])
+# plot(pca.results.all[[4]])
+##
 plot(pca.results.all[[3]])
-plot(pca.results.all[[4]])
-
+plot(pca.results.all[[3]], type="line")
+pca.results.all[[3]]$sdev^2
+(pca.results.all[[3]]$sdev[1]^2/sum(pca.results.all[[3]]$sdev^2))*100
+(pca.results.all[[3]]$sdev[2]^2/sum(pca.results.all[[3]]$sdev^2))*100
+(pca.results.all[[3]]$sdev[3]^2/sum(pca.results.all[[3]]$sdev^2))*100
+summary(pca.results.all[[3]])
+varimax(pca.results.all[[3]]$rotation[,1:8])
 #plotting scores
-plot(pca.results.all[[1]]$x[,1],pca.results.all[[1]]$x[,2])
-plot(pca.results.all[[2]]$x[,1],pca.results.all[[2]]$x[,2])
-plot(pca.results.all[[3]]$x[,1],pca.results.all[[3]]$x[,2])
-plot(pca.results.all[[4]]$x[,1],pca.results.all[[4]]$x[,2])
+# plot(pca.results.all[[1]]$x[,1],pca.results.all[[1]]$x[,2])
+# plot(pca.results.all[[2]]$x[,1],pca.results.all[[2]]$x[,2])
+# plot(pca.results.all[[3]]$x[,1],pca.results.all[[3]]$x[,2])
+# plot(pca.results.all[[4]]$x[,1],pca.results.all[[4]]$x[,2])
 ##make plots of clusters in PCA
 par(mfrow=c(1,2))
+load("PCA_results.RDATA")
 load("Surface_clusters.Rdata")
+pca<-pca.results.all[[3]]
+pc<-c(1,2)
 plot(pca.results.all[[3]]$x[,1],pca.results.all[[3]]$x[,2],
-     col = as.numeric(surface.data.clust$Cluster),pch=20)
+     col = as.numeric(surface.data.clust$Cluster),pch=20,
+     xlab=paste0("PC ", pc[1], " (", round(pca$sdev[pc[1]]^2/sum(pca$sdev^2)*100,0), "%)"),
+     ylab=paste0("PC ", pc[2], " (",round(pca$sdev[pc[2]]^2/sum(pca$sdev^2)*100,0), "%)"))
 #make the same plot but for selected medoids
 for_col_pca.m<-surface.data.clust[,c("Cluster", "FeatureIdx")]
 for_col_pca.m[!for_col_pca.m$FeatureIdx%in%clust.6medoids$FeatureIdx,"Cluster"]<-100000
@@ -326,7 +340,7 @@ plot(pca.results.all[[1]]$x[,1],pca.results.all[[1]]$x[,2])
 load("Clussters_and_distdata.RData")
 library(cluster)
 sk <- silhouette(clstrs, data.dist)
-pdf('Silhoete_plot2.pdf')
+pdf('Silhoete_plot4.pdf')
 plot(sk)
 dev.off()
 

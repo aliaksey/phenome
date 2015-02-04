@@ -5,7 +5,7 @@ load("Cell all data & ground truth scaled.RData")
 load("non_correlated_surfaces.RData")
 ##selecting only features that passed non correlation test
 feature.cell.scale<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%non_cor_feat_data$FeatureIdx,]
-feature.cell.scale_log<-feature.cell.scale_log[feature.cell.scale_log$FeatureIdx%in%rownames(non_cor_feat_data),]
+feature.cell.scale_log<-feature.cell.scale_log[feature.cell.scale_log$FeatureIdx%in%non_cor_feat_data$FeatureIdx,]
 
 ## selecting features meaningfull for shape measurement
 ##omiting rows with na
@@ -19,7 +19,9 @@ mngfll.names.feat<-all.names.temp.f[!grepl("ImageNumber", all.names.temp.f)&
                                       !grepl("ImageQuality", all.names.temp.f)&
                                       !grepl("AreaShape_Center", all.names.temp.f)]
 mngfll.names.im.Cells<-mngfll.names.feat[grepl("Cells_", mngfll.names.feat)]
-mngfll.names.im.Simple<-mngfll.names.feat[grepl("Cells_AreaShape", mngfll.names.feat)]
+mngfll.names.im.Simple<-mngfll.names.feat[grepl("Cells_AreaShape", mngfll.names.feat)&
+                                            !grepl("Zernike", mngfll.names.feat)]
+
 mngfll.names.im.Image<-mngfll.names.feat[grepl("Image", mngfll.names.feat)]
 ##for log data
 all.names.temp.f.l<-names(feature.cell.scale_log)
@@ -31,7 +33,9 @@ mngfll.names.feat.l<-all.names.temp.f.l[!grepl("ImageNumber", all.names.temp.f.l
                                       !grepl("ImageQuality", all.names.temp.f.l)&
                                       !grepl("AreaShape_Center", all.names.temp.f.l)]
 mngfll.names.im.Cells.l<-mngfll.names.feat.l[grepl("Cells_", mngfll.names.feat.l)]
-mngfll.names.im.Simple.l<-mngfll.names.feat.l[grepl("Cells_AreaShape", mngfll.names.feat.l)]
+mngfll.names.im.Simple.l<-mngfll.names.feat.l[grepl("Cells_AreaShape", mngfll.names.feat.l)&
+                                                !grepl("Zernike", mngfll.names.feat.l)]
+
 mngfll.names.im.Image.l<-mngfll.names.feat.l[grepl("Image", mngfll.names.feat.l)]
 
 ## creating input data                                   

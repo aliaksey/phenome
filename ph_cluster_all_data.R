@@ -6,7 +6,7 @@ load("Cell all data & ground truth scaled.RData")
 load("PCA_results.RDATA")
 load("non_correlated_surfaces.RData")
 ##fixing non correlated surfaces
-feature.cell.scale<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%non_cor_feat_data$FeatureIdx,]
+feature.cell.scale.t<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%non_cor_feat_data$FeatureIdx,]
 
 ## selecting features
 all.names.temp<-names(image.cell.scale)
@@ -40,12 +40,12 @@ dist.meth.u<-dist.meth[1]
 ###################################performing clustering all data set
 #performing clustering on all data set
 # to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
-to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
-#to.dist.cl<-pca.results.all[[3]]$x[,1:3]############PCA is here!!!!!!!!
-to.dist.cl2<-non_cor_feat_data[,simple.cellshape.name]
+#to.dist.cl<-feature.cell.scale.t[,simple.cellshape.name]
+to.dist.cl<-pca.results.all[[3]]$x[,1:6]############PCA is here!!!!!!!!
+#to.dist.cl2<-non_cor_feat_data[,simple.cellshape.name]
 #to.dist.cl<-feature_to_analisis
 #calculating disctance matrix
-data.dist<-dist(to.dist.cl2, method=dist.meth.u)
+data.dist<-dist(to.dist.cl, method=dist.meth.u)
 #performing clustering
 hclustres<-hclust(data.dist, method = hclust.meth.u)
 plot(hclustres)
@@ -54,11 +54,23 @@ clust.numb<-28 ##specify number of clusters for selection
 rect.hclust(hclustres,k=clust.numb)
 ##saving results of clustering
 clstrs<-cutree(hclustres,k=clust.numb)
-save(clstrs, data.dist, file="Clussters_and_distdata.RData")
 ##results of clustering
-surface.data.clust<-cbind(Cluster=cutree(hclustres,k=clust.numb),feature.cell.scale)
+surface.data.clust<-cbind(Cluster=cutree(hclustres,k=clust.numb),feature.cell.scale.t[,
+                        c("FeatureIdx",simple.cellshape.name)])
 
-# surface.data.clust<-cbind(Cluster=cutree(hclustres,k=clust.numb),
+save(surface.data.clust,clstrs, data.dist, file="Clussters_and_distdata.RData")
+
+# ##make nice plot
+# library(GGally)
+# colnames(surface.data.clust)<-gsub("Cells_AreaShape_", "", colnames(surface.data.clust))
+# surface.data.clust$Cluster<-as.factor(surface.data.clust$Cluster)
+# ggpairs(surface.data.clust,columns = 3:ncol(surface.data.clust),
+#         upper = list(continuous='cor'),
+#         lower=list(continuous = 'points'),
+#         diag=list(continuous='density'),
+#         title = "Clusters of Cell morphology",
+#         colour="Cluster")
+# # surface.data.clust<-cbind(Cluster=cutree(hclustres,k=clust.numb),
 #                           FeatureIdx=row.names(non_cor_feat_data),non_cor_feat_data)
 
 ###finf medoids of cluster
@@ -75,9 +87,6 @@ clust.medoid = function(i, distmat, clusters) {
 
 ##find medoids for all data set
 distmatclust<-as.matrix(data.dist)
-rownames(distmatclust)<-feature.cell.scale[,"FeatureIdx"]
-colnames(distmatclust)<-feature.cell.scale[,"FeatureIdx"]
-
 rownames(distmatclust)<-surface.data.clust[,"FeatureIdx"]
 colnames(distmatclust)<-surface.data.clust[,"FeatureIdx"]
 

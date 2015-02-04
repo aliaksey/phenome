@@ -28,7 +28,6 @@ shape.col.names<-all.names.cell.t[!grepl("Center", all.names.cell.t)&
                                     !grepl("Zernike", all.names.cell.t)]
 #c("ImageNumber","ObjectNumber", "FeatureIdx")
 #cor(x[sapply(x, is.numeric)])
-feature.cell.scale$Cells_AreaShape_Orientation<-abs(feature.cell.scale$Cells_AreaShape_Orientation)
 fi.cor<-feature.cell.scale[,shape.col.names]
 row.names(fi.cor)<-feature.cell.scale$FeatureIdx
 #calculating correlations
