@@ -168,10 +168,11 @@ pca.results.gr.l<-lapply(all.dat.grtr.l,function(x) prcomp(x,center=F, scale=F))
 #   
 # }
 
-ground.truth.pca2<-c(ground.truth.pca.g,ground.truth.pca.g.l,pca.results.gr.l,pca.results.gr)
+ground.truth.pca2<-c(ground.truth.pca.g,ground.truth.pca.g.l)
+gr_tr_pc_results<-c(pca.results.gr.l,pca.results.gr)
 
 save(pca.results.gr.l,pca.results.gr,pca.results.all,pca.results.all_l,
-     pca.results.gr.l, ground.truth.pca2,file="PCA_results.RDATA")
+     pca.results.gr.l,gr_tr_pc_results, ground.truth.pca2,file="PCA_results.RDATA")
 
 
 #save(ground.truth.pca, pca.results.all, file="pca_results_for_ground_truth_and_all.RData")

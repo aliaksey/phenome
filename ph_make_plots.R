@@ -78,7 +78,8 @@ D1 <- D %>% filter(GroundTruth == "feature 3 %") %>%
   filter((DistanceMethod=="euclidean")|(ClusterMethod=="K-Means")) %>% 
   group_by(ClusterMethod) %>% mutate(rank=order(Accuracy))
 p <- ggplot(D1, aes(rank, Accuracy, color=ClusterMethod)) + geom_line()
-ggsave("accuracy_comparison_gr1.pdf", width=8, height=5)
+p
+ggsave("accuracy_comparison_gr1_2.pdf", width=8, height=5)
 
 #group2 based on grounf truth type
 clust_accur_results.gr2<-c()
