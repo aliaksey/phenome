@@ -2,7 +2,12 @@
 ph_validation_clusters("24 clusters all simple after filtration of correlated surfaces",surface.data.clust)
 ph_validation_clusters("clusters all data Moutliers",surface.data.clust.mo)
 ph_validation_clusters("50 clusters",surface.data.clust)
-ph_validation_clusters("28 noncorrelaed clusters",clust.medoids)
+ph_validation_clusters("4 clusters",clust.medoids)
+
+
+pcabas<-read.csv2("medians_28_clusters_ver3_0.csv")
+
+ph_validation_clusters("medians_28_clusters_ver3_0t",pcabas)
 
 ph_validation_clusters<-function(name, cluster.data)
 {

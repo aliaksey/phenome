@@ -53,6 +53,7 @@ highlyCor.data <- fi.cor[highlyCor,]
 
 #corrplots
 corrplot(cor(t(nonCor.data[1:100,]),method="spearman"))
+#image(cor(t(nonCor.data[1:100,]),method="spearman"))
 corrplot(cor(t(highlyCor.data[1:100,]),method="spearman"))
 
 # noncorrelted_surf<-as.data.frame(cbind(FeatureIdx=as.numeric(rownames(highlyCor.data)),
