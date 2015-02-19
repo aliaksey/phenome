@@ -41,7 +41,7 @@ dist.meth.u<-dist.meth[1]
 #performing clustering on all data set
 # to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
 #to.dist.cl<-feature.cell.scale.t[,simple.cellshape.name]
-to.dist.cl<-pca.results.all[[3]]$x[,1:5]############PCA is here!!!!!!!!
+to.dist.cl<-pca.results.all[[3]]$x[,1:7]############PCA is here!!!!!!!!
 #to.dist.cl2<-non_cor_feat_data[,simple.cellshape.name]
 #to.dist.cl<-feature_to_analisis
 #calculating disctance matrix

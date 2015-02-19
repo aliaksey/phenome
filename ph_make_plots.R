@@ -59,7 +59,7 @@ g2<-ggplot(cell.area.f,aes(x=Cells_AreaShape_Area,y=Cells_AreaShape_Perimeter)) 
   labs(x="Area",y="Perimeter",title ="After Filter")
 grid.arrange(g001,g1,g002,g2,nrow=2, ncol=2)
 #################assesing accuracy of unsupervised methods
-load("accuracy_of_unsupervised_method.Rdata")
+load("accuracy_of_unsupervised_method_6_0_2.Rdata")
 ## make different groups for plotting
 #group1 based on cluster method
 clust_accur_results.gr1<-c()
@@ -79,6 +79,24 @@ D1 <- D %>% filter(GroundTruth == "feature 3 %") %>%
   group_by(ClusterMethod) %>% mutate(rank=order(Accuracy))
 p <- ggplot(D1, aes(rank, Accuracy, color=ClusterMethod)) + geom_line()
 p
+
+D2 <- D %>% filter((GroundTruth == "PCA_feat 3% SurfCells")&(FeatureNames=="PC7")) %>% 
+  filter((DistanceMethod=="euclidean")|(ClusterMethod=="K-Means")) %>% 
+  group_by(ClusterMethod) %>% mutate(rank=order(Accuracy))
+q<-ggplot(D2,aes(x=factor(ClusterMethod),y=Accuracy,fill=factor(ClusterMethod)),
+           color=factor(ClusterMethod)) +  
+  stat_summary(fun.y=mean,position=position_dodge(),geom="bar")
+q <- ggplot(D2, aes(rank, Accuracy, color=ClusterMethod)) + geom_line()
+q
+
+D3 <- D %>% filter((GroundTruth == "feature 3 %")&(FeatureNames=="Simple" )) %>% 
+  filter((DistanceMethod=="euclidean")|(ClusterMethod=="K-Means")) %>% 
+  group_by(ClusterMethod) %>% mutate(rank=order(Accuracy))
+p1<-ggplot(D3,aes(x=factor(ClusterMethod),y=Accuracy,fill=factor(ClusterMethod)),
+           color=factor(ClusterMethod)) +  
+  stat_summary(fun.y=mean,position=position_dodge(),geom="bar")
+p1
+
 ggsave("accuracy_comparison_gr1_2.pdf", width=8, height=5)
 
 #group2 based on grounf truth type

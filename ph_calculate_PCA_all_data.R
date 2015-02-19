@@ -57,7 +57,8 @@ all.dat_log<-list(SurfAll=surf.sc.dat.all.l,SurfCells=surf.sc.dat.cells.l,SurfSi
 ##calculate pca for allunits
 pca.results.all<-lapply(all.dat,function(x) prcomp(x,center=F, scale=F))
 pca.results.all_l<-lapply(all.dat_log,function(x) prcomp(x,center=F, scale=F))
-###calcylating ground truth PCA
+
+###calculating ground truth PCA
 
 ##pca scores based on general pca calculations
 ground.truth.pca.g<-c()
@@ -115,30 +116,40 @@ for(k in 1:length(all.dat_log)){
   
 }
 
+
+feature.cell.scale<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%non_cor_feat_data$FeatureIdx,]
+
+pca_for_grnd_truth.temp<-grnd.truth.feat.scale[[3]]
+
+pca_for_grnd_truth<-pca_for_grnd_truth.temp[pca_for_grnd_truth.temp$FeatureIdx%in%non_cor_feat_data$FeatureIdx,]
+
 ###pca of ground truth data
 ## create different set of gr fet with different names
-grtr.sc.dat.all<-grnd.truth.feat.scale[[3]][,mngfll.names.feat]
-grtr.sc.dat.cells<-grnd.truth.feat.scale[[3]][,mngfll.names.im.Cells]
-grtr.sc.dat.simple<-grnd.truth.feat.scale[[3]][,mngfll.names.im.Simple]
-grtr.sc.dat.image<-grnd.truth.feat.scale[[3]][,mngfll.names.im.Image]
+#grtr.sc.dat.all<-pca_for_grnd_truth[,mngfll.names.feat]
+#grtr.sc.dat.cells<-pca_for_grnd_truth[,mngfll.names.im.Cells]
+grtr.sc.dat.simple<-pca_for_grnd_truth[,mngfll.names.im.Simple]
+#grtr.sc.dat.image<-pca_for_grnd_truth[,mngfll.names.im.Image]
 ##joining together
-all.dat.grtr<-list(SurfAll=grtr.sc.dat.all,SurfCells=grtr.sc.dat.cells,SurfSimpl=grtr.sc.dat.simple,
-              SurfImg=grtr.sc.dat.image)
+# all.dat.grtr<-list(SurfAll=grtr.sc.dat.all,SurfCells=grtr.sc.dat.cells,SurfSimpl=grtr.sc.dat.simple,
+#               SurfImg=grtr.sc.dat.image)
+
+all.dat.grtr<-list(SurfSimpl=grtr.sc.dat.simple)
+
 ##calculating PCA
 pca.results.gr<-lapply(all.dat.grtr,function(x) prcomp(x,center=F, scale=F))
 
-##the same for log data
-## create different set of gr fet with different names
-grtr.sc.dat.all.l<-grnd.truth.feat.scale_log[[3]][,mngfll.names.feat.l]
-grtr.sc.dat.cells.l<-grnd.truth.feat.scale_log[[3]][,mngfll.names.im.Cells.l]
-grtr.sc.dat.simple.l<-grnd.truth.feat.scale_log[[3]][,mngfll.names.im.Simple.l]
-grtr.sc.dat.image.l<-grnd.truth.feat.scale_log[[3]][,mngfll.names.im.Image.l]
-##joining together
-all.dat.grtr.l<-list(SurfAll=grtr.sc.dat.all.l,SurfCells=grtr.sc.dat.cells.l,SurfSimpl=grtr.sc.dat.simple.l,
-                   SurfImg=grtr.sc.dat.image.l)
-##calculating PCA
-pca.results.gr.l<-lapply(all.dat.grtr.l,function(x) prcomp(x,center=F, scale=F))
-
+# ##the same for log data
+# ## create different set of gr fet with different names
+# grtr.sc.dat.all.l<-grnd.truth.feat.scale_log[[3]][,mngfll.names.feat.l]
+# grtr.sc.dat.cells.l<-grnd.truth.feat.scale_log[[3]][,mngfll.names.im.Cells.l]
+# grtr.sc.dat.simple.l<-grnd.truth.feat.scale_log[[3]][,mngfll.names.im.Simple.l]
+# grtr.sc.dat.image.l<-grnd.truth.feat.scale_log[[3]][,mngfll.names.im.Image.l]
+# ##joining together
+# all.dat.grtr.l<-list(SurfAll=grtr.sc.dat.all.l,SurfCells=grtr.sc.dat.cells.l,SurfSimpl=grtr.sc.dat.simple.l,
+#                    SurfImg=grtr.sc.dat.image.l)
+# ##calculating PCA
+# pca.results.gr.l<-lapply(all.dat.grtr.l,function(x) prcomp(x,center=F, scale=F))
+# 
 
 ##pca scores based on general pca calculations
 # ground.truth.pca<-c()
@@ -169,10 +180,14 @@ pca.results.gr.l<-lapply(all.dat.grtr.l,function(x) prcomp(x,center=F, scale=F))
 # }
 
 ground.truth.pca2<-c(ground.truth.pca.g,ground.truth.pca.g.l)
-gr_tr_pc_results<-c(pca.results.gr.l,pca.results.gr)
+# gr_tr_pc_results<-c(pca.results.gr.l,pca.results.gr)
 
-save(pca.results.gr.l,pca.results.gr,pca.results.all,pca.results.all_l,
-     pca.results.gr.l,gr_tr_pc_results, ground.truth.pca2,file="PCA_results.RDATA")
+# save(pca.results.gr.l,pca.results.gr,pca.results.all,pca.results.all_l,
+#      pca.results.gr.l,gr_tr_pc_results, ground.truth.pca2,file="PCA_results.RDATA")
+#ground.truth.pca2<-pca.results.gr
+save(pca.results.gr,ground.truth.pca2,pca.results.all,pca.results.all_l,
+     file="PCA_results2.RDATA")
+
 
 
 #save(ground.truth.pca, pca.results.all, file="pca_results_for_ground_truth_and_all.RData")

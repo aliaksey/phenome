@@ -7,10 +7,10 @@ library("caret")
 library("plyr")
 library("cluster")
 load("Cell all data & ground truth scaled.RData")
-load("model_selection_svm.RData")
+#load("model_selection_svm.RData")
 #load("pca_results_for_ground_truth_and_all.RData")
-load("PCA_results.RDATA")
-load("model_selection_rf.RData")
+load("PCA_results2.RDATA")
+#load("model_selection_rf.RData")
 # selecting cell names find by model simulation
 #svm
 # model.svm.1<-predictors(model.sel.res.feat.svm[[1]])
@@ -21,6 +21,8 @@ load("model_selection_rf.RData")
 # model.rf.2<-predictors(model.sel.res.feat.rf[[2]])
 # model.rf.3<-predictors(model.sel.res.feat.rf[[3]])
 ##selecting cell shape variables creating 3 class.unes ofv variables: 10 simple; Zernike; and selected by bootstrap
+load("non_correlated_surfaces.RData")
+##fixing non correlated surfaces
 all.names.temp<-names(image.cell.scale)
 
 all.names<-all.names.temp[!grepl("Object_Number", all.names.temp)&
@@ -50,7 +52,10 @@ selnames.temp<-list(All_meaningful=all.names,Simple=simple.cellshape.name,Simple
                Simple5=simple.5, Zernike=zernike.cellshape.name)#, 
               # SVM1=model.svm.1,SVM2=model.svm.2,SVM3=model.svm.3,RF1=model.rf.1,RF2=model.rf.2,RF3=model.rf.3)
 #
+##recent modifications
 ground.truth.pca<-ground.truth.pca2
+feature.cell.scale<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%non_cor_feat_data$FeatureIdx,]
+
 selnames.corr.surf<-vector("list",length(selnames.temp))
 selnames.corr.im<-vector("list",length(selnames.temp))
 for(kk in 1:length(selnames.temp)){
@@ -314,7 +319,7 @@ clust_accur_results<-clust_accur_results[order(clust_accur_results$Accuracy),]
 tail(clust_accur_results, n=100L)
 plot(clust_accur_results$Accuracy)
 
-save(clust_accur_results, file="accuracy_of_unsupervised_method_6_0.Rdata")
+save(clust_accur_results, file="accuracy_of_unsupervised_method_6_0_2.Rdata")
 
 load("accuracy_of_unsupervised_method_6_0.Rdata")
 plot(clust_accur_results$Accuracy, main="Accuracy of clustering methods", ylab="Accuracy",
