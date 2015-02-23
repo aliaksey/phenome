@@ -26,10 +26,10 @@ simple.cellshape.name<-all.names.temp[grepl("Cells_AreaShape", all.names.temp)
 #combn(simple.cellshape.name,n)
 #do.call(paste, expand.grid(simple.cellshape.name,1:n))
 
-simple.2<-simple.cellshape.name[!grepl("Orientation",simple.cellshape.name)]
-simple.3<-simple.2[!grepl("Euler",simple.2)]
-simple.4<-simple.3[!grepl("Major",simple.3)]
-simple.5<-simple.4[!grepl("Compact",simple.4)]
+# simple.2<-simple.cellshape.name[!grepl("Orientation",simple.cellshape.name)]
+# simple.3<-simple.2[!grepl("Euler",simple.2)]
+# simple.4<-simple.3[!grepl("Major",simple.3)]
+# simple.5<-simple.4[!grepl("Compact",simple.4)]
 ########setting parameters
 hclust.meth<-c("ward.D","ward.D2", "single", "complete", "average", "mcquitty" , "median",  "centroid")
 ##setting metods for disstances hclust
@@ -41,7 +41,10 @@ dist.meth.u<-dist.meth[1]
 #performing clustering on all data set
 # to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
 #to.dist.cl<-feature.cell.scale.t[,simple.cellshape.name]
+
 to.dist.cl<-pca.results.all[[3]]$x[,1:7]############PCA is here!!!!!!!!
+rownames(to.dist.cl)<-feature.cell.scale.t$FeatureIdx
+
 #to.dist.cl2<-non_cor_feat_data[,simple.cellshape.name]
 #to.dist.cl<-feature_to_analisis
 #calculating disctance matrix
@@ -52,11 +55,54 @@ plot(hclustres)
 clust.numb<-28 ##specify number of clusters for selection
 #rect.hclust(hclustres,h=5)
 rect.hclust(hclustres,k=clust.numb)
+
+
+clu_to_order<-read.csv2("medians_28_clusters_ver3_0.csv")
+labelCol <- function(x) {
+  if (is.leaf(x)) {
+    ## fetch label
+    label <- attr(x, "label") 
+    ## set label color to red for A and B, to blue otherwise
+    attr(x, "nodePar") <- list(lab.col=ifelse(!label %in% clu_to_order$FeatureIdx, "white","red"))
+  }
+  return(x)
+}
+
+## apply labelCol on all nodes of the dendrogram
+d <- dendrapply(as.dendrogram(hclustres), labelCol)
+
+plot(d)
+rect.hclust(hclustres,k=clust.numb)
+
+
+library(dendextend)
+hclustres.dend <- as.dendrogram(hclustres)
+
+hclustres.dend <- color_branches(hclustres.dend, k = 28)
+hclustres.dend <- color_labels(hclustres.dend, k = 28)
+plot(hclustres.dend)
+
+
+###############start catting
+clstrs<-as.data.frame(cbind(Cluster=cutree(hclustres.dend,k=clust.numb,
+ order_clusters_as_data =F,
+ sort_cluster_numbers = T),FeatureIdx=rownames(as.matrix(cutree(hclustres.dend,k=clust.numb,
+ order_clusters_as_data =F,
+sort_cluster_numbers = F)))))
+
+x<-feature.cell.scale.t[,
+                        c("FeatureIdx",simple.cellshape.name)]
+
+mm<-setdiff(clstrs$FeatureIdx,x$FeatureIdx)
+length(mm)
+
 ##saving results of clustering
-clstrs<-cutree(hclustres,k=clust.numb)
+
+#clstrs<-cutree(hclustres,k=clust.numb)
 ##results of clustering
-surface.data.clust<-cbind(Cluster=cutree(hclustres,k=clust.numb),feature.cell.scale.t[,
-                        c("FeatureIdx",simple.cellshape.name)])
+surface.data.clust<-merge(feature.cell.scale.t[,
+                        c("FeatureIdx",simple.cellshape.name)],clstrs,by="FeatureIdx",sort=F)
+surface.data.clust$Cluster<-as.numeric(as.character(surface.data.clust$Cluster))
 
 save(surface.data.clust,clstrs, data.dist, file="Clussters_and_distdata.RData")
 
@@ -87,20 +133,44 @@ clust.medoid = function(i, distmat, clusters) {
 
 ##find medoids for all data set
 distmatclust<-as.matrix(data.dist)
-rownames(distmatclust)<-surface.data.clust[,"FeatureIdx"]
-colnames(distmatclust)<-surface.data.clust[,"FeatureIdx"]
+# rownames(distmatclust)<-surface.data.clust[,"FeatureIdx"]
+# colnames(distmatclust)<-surface.data.clust[,"FeatureIdx"]
 
 clust.medoids<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(surface.data.clust$Cluster),
           clust.medoid, distmatclust, surface.data.clust)),Cluster=unique(surface.data.clust$Cluster)))
 clust.medoids
+#########plotting results
+
+labelCol <- function(x) {
+  if (is.leaf(x)) {
+    ## fetch label
+    label <- attr(x, "label") 
+    ## set label color to red for A and B, to blue otherwise
+    attr(x, "nodePar") <- list(lab.col=ifelse(!label %in% clust.medoids$FeatureIdx, "white","red"))
+  }
+  return(x)
+}
+
+## apply labelCol on all nodes of the dendrogram
+de <- dendrapply(as.dendrogram(hclustres), labelCol)
+
+plot(de)
+rect.hclust(hclustres,k=clust.numb)
 
 #find 5 nearest neighbors for medoid within clusters
 clust.6medoids<-c()
+
+
 f.res<-c()
-for(i in unique(clust.medoids$Cluster)){
+for(i in unique(surface.data.clust$Cluster)){
   ind = (surface.data.clust$Cluster == i)
+  if(all.equal(i,unique(surface.data.clust[ind,"Cluster"]))==FALSE) break
+  cvf<-surface.data.clust[ind,"FeatureIdx"]
   temp.dist<-distmatclust[ind, ind]
-  temp.dist.med<-as.matrix(temp.dist[colnames(temp.dist)==clust.medoids[clust.medoids$Cluster==i,
+  if(all.equal(cvf,as.numeric(rownames(temp.dist)))==FALSE) break
+  
+  temp.dist.med<-as.matrix(temp.dist[colnames(temp.dist)==
+                                       clust.medoids[clust.medoids$Cluster==i,
                                 "FeatureIdx"]])
   rownames(temp.dist.med)<-rownames(temp.dist)
   if (length(temp.dist.med)<=10) res=rownames(temp.dist.med) else res=rownames(temp.dist.med)[order(temp.dist.med)][1:10]
@@ -109,6 +179,7 @@ for(i in unique(clust.medoids$Cluster)){
 }
 clust.6medoids<-as.data.frame(clust.6medoids)
 clust.6medoids
+clust.6medoids<-clust.6medoids[order(clust.6medoids$Cluster),]
 
 save(surface.data.clust,clust.6medoids,clust.medoids,data.dist,distmatclust, file="Surface_clusters.Rdata")
 # 
