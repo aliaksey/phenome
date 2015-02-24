@@ -26,10 +26,10 @@ data_for_hist<-ddply(cell.density, "FeatureIdx", summarise,
                      Image_Count_Cells = sum(Image_Count_Cells))
 
 hist(data_for_hist$Image_Count_Cells, breaks = 100,xlab = "Number of cells per surface",
-     main="Toatl cell number per surface")
+     main="Total cell number per surface")
 
 hist(cell.density$Image_Count_Cells, breaks = 100,xlab = "Number of cells per repeat",
-     main="Toatl cell number per repeat")
+     main="Total cell number per repeat")
 #for filtered data
 library(plyr)
 data_for_hist_f<-ddply(cell.dns.f, "FeatureIdx", summarise, 
