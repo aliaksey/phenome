@@ -1,7 +1,7 @@
 rm(list=ls())
 library(chemometrics)
 library(caret)
-
+set.seed(12345)
 load("ph_raw_data.RData")
 load("Cell_area_perim_corr.RData")
 ##selecting cell shape variables
