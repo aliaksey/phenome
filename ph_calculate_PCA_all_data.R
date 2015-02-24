@@ -10,7 +10,7 @@ feature.cell.scale_log<-feature.cell.scale_log[feature.cell.scale_log$FeatureIdx
 ## selecting features meaningfull for shape measurement
 ##omiting rows with na
 all.names.temp.f<-names(feature.cell.scale)
-writeClipboard(all.names.temp.f)
+#writeClipboard(all.names.temp.f)
 
 mngfll.names.feat<-all.names.temp.f[!grepl("ImageNumber", all.names.temp.f)&
                                       !grepl("FeatureIdx", all.names.temp.f)&

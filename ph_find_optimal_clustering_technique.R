@@ -321,7 +321,7 @@ plot(clust_accur_results$Accuracy)
 
 save(clust_accur_results, file="accuracy_of_unsupervised_method_6_0_2.Rdata")
 
-load("accuracy_of_unsupervised_method_6_0.Rdata")
+load("accuracy_of_unsupervised_method_6_0_2.Rdata")
 plot(clust_accur_results$Accuracy, main="Accuracy of clustering methods", ylab="Accuracy",
      xlab="Index of Clustering method")
 #do.call(paste, expand.grid(simple.cellshape.name,1:10))

@@ -3,7 +3,7 @@ library(caret)
 library(corrplot)
 #############################fix misread between clusters daat
 load("Cell all data & ground truth scaled.RData")
-load("PCA_results.RDATA")
+load("PCA_results2.RDATA")
 load("non_correlated_surfaces.RData")
 ##fixing non correlated surfaces
 feature.cell.scale.t<-feature.cell.scale[feature.cell.scale$FeatureIdx%in%non_cor_feat_data$FeatureIdx,]
