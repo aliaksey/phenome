@@ -57,22 +57,22 @@ clust.numb<-28 ##specify number of clusters for selection
 rect.hclust(hclustres,k=clust.numb)
 
 
-clu_to_order<-read.csv2("medians_28_clusters_ver3_0.csv")
-labelCol <- function(x) {
-  if (is.leaf(x)) {
-    ## fetch label
-    label <- attr(x, "label") 
-    ## set label color to red for A and B, to blue otherwise
-    attr(x, "nodePar") <- list(lab.col=ifelse(!label %in% clu_to_order$FeatureIdx, "white","red"))
-  }
-  return(x)
-}
-
-## apply labelCol on all nodes of the dendrogram
-d <- dendrapply(as.dendrogram(hclustres), labelCol)
-
-plot(d)
-rect.hclust(hclustres,k=clust.numb)
+# clu_to_order<-read.csv2("medians_28_clusters_ver3_0.csv")
+# labelCol <- function(x) {
+#   if (is.leaf(x)) {
+#     ## fetch label
+#     label <- attr(x, "label") 
+#     ## set label color to red for A and B, to blue otherwise
+#     attr(x, "nodePar") <- list(lab.col=ifelse(!label %in% clu_to_order$FeatureIdx, "white","red"))
+#   }
+#   return(x)
+# }
+# 
+# ## apply labelCol on all nodes of the dendrogram
+# d <- dendrapply(as.dendrogram(hclustres), labelCol)
+# 
+# plot(d)
+# rect.hclust(hclustres,k=clust.numb)
 
 
 library(dendextend)
