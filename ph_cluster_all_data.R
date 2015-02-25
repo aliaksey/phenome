@@ -139,6 +139,7 @@ distmatclust<-as.matrix(data.dist)
 clust.medoids<-as.data.frame(cbind(FeatureIdx=as.numeric(sapply(unique(surface.data.clust$Cluster),
           clust.medoid, distmatclust, surface.data.clust)),Cluster=unique(surface.data.clust$Cluster)))
 clust.medoids
+clust.medoids<-clust.medoids[order(clust.medoids$Cluster),]
 #########plotting results
 
 labelCol <- function(x) {
