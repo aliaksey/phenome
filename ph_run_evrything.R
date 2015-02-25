@@ -5,7 +5,9 @@
 # Output: 
 # ph_raw_data.RData - stores the csv files in binary form, after
 # doing some basic processing to add columns to the PerObject table.
-# Contains the variables cell.ftrs and image.data
+# Contains 
+# cell.ftrs - PerObject table
+# image.data - PerImage table
 #source("ph_load_raw_data.R")
 
 # What it does: Loads libraries, installs what is missing
@@ -26,7 +28,9 @@ source("ph_filter_cell_density.R")
 
 # What it does: Pools all the cells from all the replicates of a given surface
 # then removes cells that are outliers in terms of area and perimeter. Uses
-# the 1.5 IQR rule, first on area and then on perimeter.
+# the 1.5 IQR rule, first on area and then on perimeter. Note that no scaling
+# of cell features is done here because we are computing the outliers for each
+# features (area and perimeter) separately
 # Input: ph_raw_data.RData, Cell_dens_corr.RData
 # Output: 
 # Cell_area_perim_corr.RData - contains cell.area.f
@@ -38,7 +42,8 @@ source("ph_filter_extreme_missegmentataion.R")
 # What it does: Pools all the cells from all the replicates of a given surface
 # then removes cells that are outliers in terms of the shape. Moutlier is used
 # to do the pruning. Moutlier computes the mahalanobis distance of each cell
-# fromt the center and removes outlier cells
+# fromt the center and removes outlier cells. Note that feature scaling is done
+# prior to the outlier removal. However the output (cell.shape.f) is not scaled
 # Input: ph_raw_data.RData, Cell_area_perim_corr.RData
 # Output: 
 # mahalanobis_filtration_plot.RData - contains cell.shape.f, cell.shape
@@ -54,45 +59,88 @@ source("ph_filter_in_mahalanobis.R")
 # reproducable_surfaces_plot.RData - contains statperfeat,cell.ftrs.reprod,
 # and cell.ftrs.f.scaled
 # cell.ftrs.reprod - contains statperfeat,cell.ftrs.reprod
-# - statperfeat - 
-# - cell.ftrs.reprod - 
-# - cell.ftrs.f.scaled - 
+# - statperfeat - various statistics per surface, such as no. of cells and no.
+#                 of repeats before and after filtering
+# - cell.ftrs.reprod - ImageNumber and FeatureIdx of reproducible replicates
+# - cell.ftrs.f.scaled - per cell data, same as cell.shape.f except that it is 
+#                        scaled
 source("ph_find_reproducible_repeats.R")
 
 
-# What it does:
-# Input: 
-# Output:
+# What it does: For each of the reproducible replicates, creates a per-replicate
+# profile by computing median across all the cells in the replicate (cells have
+# been filtered for outliers). All features from the PerObject and PerImage
+# table are included. Scaled version of the features are also saved.
+# Input: ph_raw_data.RData, Cell_image reprod.RData, Cell_shape_corr.RData
+# Output: joined scaled data.RData - contains image.allftrs.scale,image.allftrs
+# - image.allftrs - per-replicate profile (by computing median across all 
+#                   cells per feature) of reproducible replicates. The row ids 
+#                   are same as cell.ftrs.reprod. Here, all features from the
+#                   PerImage and PerObject table were included
+# - image.allftrs.scale - same as image.allftrs except scaled. Some features
+#                         that were NA after scaling were excluded
 source("ph_scale_data.R")
 
-# What it does:
-# Input: 
-# Output:
+
+# What it does: Loads classification results obtained by running the 5 
+# CPA-trained binary classifiers against all the images in the dataset. Then
+# it generates a ground truth set by selecting the most enriched images for 
+# each class. 
+# Input: supervised classyfication result.Rdata, joined scaled data.RData
+# supervised classyfication result.Rdata contains brn,mlt,pnc,spn,stk
+# - brn - for each image (=replicate) in the dataset, the enrichment score for 
+#         the class "branched"
+# - mlt - multipolar, pnc - pancake, spn - stretch pancake, stk - stick
+# Output: Images for Control ground  Truth all3.Rdata - contains 
+#         grnd_trth1,grnd_trth2,grnd_trth3
+# - grnd_trth1 - the top 1% percentile of images (=replicates) per class. Here
+#                "top" means top-ranked based on enrichment score for the class
+# - grnd_trth2 - top 2%
+# - grnd_trth3 - top 3%
 source("ph_create_ground_truth_data_set.R")
 
-# What it does:
+
+# What it does: same as ph_create_ground_truth_data_set.R but does so on a 
+# per surface basis
 # Input: 
-# Output:
+# Output: Images for Control ground  Truth all3 feature edition.Rdata - 
+# contains grnd_trth1.sf,grnd_trth2.sf,grnd_trth3.sf
 source("ph_create_ground_truth_feature.R")
 
-# What it does:
+# What it does: For each ground truth set, create data matrix by including
+# all the features
+# !!!!!!!!!! NOT SURE EXACTLY WHAT IS BEING DONE HERE !!!!!!!!!! 
 # Input: 
-# Output:
+# Images for Control ground  Truth all3.Rdata
+# Images for Control ground  Truth all3 feature edition.Rdata
+# joined scaled data.RData
+# ph_raw_data.RData
+# Output: Cell all data & ground truth scaled.RData containing
+# feature.cell - takes image.allftrs, which is the per-replicate profiles of 
+#                reproducible replicates and computes median across all of them
+#                per surface
+# feature.cell.scale - scaled version of feature.cell
+# feature.cell.scale_log - log version of feature.cell.scale
+# image.cell.scale - ?
+# grnd.truth.feat.scale - ground truth subset of feature.cell.scale
+# grnd.truth.feat.scale_log - ground truth subset of feature.cell.scale_log
+# grnd.truth.img.scale - ground truth subset of image.cell.scale
 source("ph_groundtruth_scaling_and_joining_data.R")
 
-# What it does:
+# What it does: Not being used
 # Input: 
 # Output:
 #source("ph_find_set_of_features_to_use_for_clustering.R")##can take a lot of hours, better load previous res
 
-# What it does:
+# What it does: Not being used
 # Input: 
 # Output:
 #source("ph_groud_truth_pca.R")
 
 # What it does:
-# Input: 
-# Output:
+# Input: Cell all data & ground truth scaled.RData
+# Output: non_correlated_surfaces.RData contains
+# - non_cor_feat_data
 source("ph_find_noncorrelated_surfaces.R")
 
 # What it does:
