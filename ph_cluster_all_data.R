@@ -40,9 +40,9 @@ dist.meth.u<-dist.meth[1]
 ###################################performing clustering all data set
 #performing clustering on all data set
 # to.dist.cl<-feature.cell.scale[,simple.cellshape.name]
-to.dist.cl<-feature.cell.scale.t[,simple.cellshape.name]
+#to.dist.cl<-feature.cell.scale.t[,simple.cellshape.name]
 
-#to.dist.cl<-pca.results.all[[3]]$x[,1:8]############PCA is here!!!!!!!!
+to.dist.cl<-pca.results.all[[3]]$x[,1:7]############PCA is here!!!!!!!!
 rownames(to.dist.cl)<-feature.cell.scale.t$FeatureIdx
 
 #to.dist.cl2<-non_cor_feat_data[,simple.cellshape.name]
