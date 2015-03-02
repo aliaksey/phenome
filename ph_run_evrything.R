@@ -137,33 +137,59 @@ source("ph_groundtruth_scaling_and_joining_data.R")
 # Output:
 #source("ph_groud_truth_pca.R")
 
-# What it does:
+# What it does: Finds a subset of surfaces that are uncorrelated with each other
+# This step is to reduce the number of surfaces going in to the next step of
+# clustering
 # Input: Cell all data & ground truth scaled.RData
 # Output: non_correlated_surfaces.RData contains
-# - non_cor_feat_data
+# - non_cor_feat_data - takes feature.cell.scale, which is per-surface profiles,
+#                       preserves only shape features, and removes surfaces that
+#                       are highly correlated
 source("ph_find_noncorrelated_surfaces.R")
 
-# What it does:
-# Input: 
-# Output:
+# What it does: Compute PCA for the pruned set of surfaces
+# Input: Cell all data & ground truth scaled.RData, non_correlated_surfaces.RData
+# Output: PCA_results2.RDATA contains - 
+# pca.results.all - list of PCA results for different sets of features. We are 
+#                   interested in 3rd one, which contains PCA results for 11 
+#                   morphological features. PCA is performed on non_cor_feat_data
+# pca.results.all_l - same as pca.results.all but for log transformed data
+# pca.results.gr - same as pca.results.all but for groun truth data alone
+# ground.truth.pca2 - same as pca.results.gr but only scores, not full results
 source("ph_calculate_PCA_all_data.R")
 
-# What it does:
-# Input: 
-# Output:
+# What it does: Run various clustering algorithms on the data, and ranks them
+# based on their accuracy with respect to grouping the ground truth surfaces
+# Input: Cell all data & ground truth scaled.RData, PCA_results2.RDATA
+# Output: accuracy_of_unsupervised_method_6_0_2.Rdata
+# clust_accur_results - accuracy scores for different clustering methods
 source("ph_find_optimal_clustering_technique.R")
 
-# What it does:
-# Input: 
-# Output:
+
+# What it does: Performs hierarchical clustering (ward + euclidean) on the 
+# 7-dimensional PCA space obtained in ph_calculate_PCA_all_data.R
+# Input: Cell all data & ground truth scaled.RData, PCA_results2.RDATA,
+#        non_correlated_surfaces.RData
+# Output: 
+# Clussters_and_distdata.RData contains
+# - surface.data.clust - same as non_cor_feat_data + cluster id
+# - clstrs - surface id + cluster id
+# - data.dist - n x n euclidean distance matrix, where n is the number of surfaces
+# Surface_clusters.Rdata contains
+# - clust.6medoids - cluster id + medoid + 9 NN of medoid (first one in the list is medoid)
+# - clust.medoids - cluster id + medoid 
+# - distmatclust -  same as data.dist
+# - data.dist - (above)
+# - surface.data.clust - (above) 
 source("ph_cluster_all_data.R")
 
-# What it does:
+
+# What it does: Not used
 # Input: 
 # Output:
 # source("ph_cluster_representative_surfaces.R")
 
-# What it does:
+# What it does: Not used
 # Input: 
 # Output:
 # source("ph_find_outliers_from_all_data_set.R")
@@ -173,7 +199,7 @@ source("ph_cluster_all_data.R")
 # Output:
 # source("ph_make_plots.R")
 
-# What it does:
+# What it does: Not used
 # Input: 
 # Output:
 # source("ph_plot_map_of_ground_truth.R")
@@ -183,7 +209,7 @@ source("ph_cluster_all_data.R")
 # Output:
 # source("ph_")
 
-# What it does:
-# Input: 
-# Output:
+# What it does: Plots results across all stages of the pipeline
+# Input: many different Rdata files generated above
+# Output: many different plots
 source("ph_make_plots.R")
