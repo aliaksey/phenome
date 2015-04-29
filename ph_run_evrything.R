@@ -214,4 +214,5 @@ source("ph_cluster_all_data.R")
 # What it does: Plots results across all stages of the pipeline
 # Input: many different Rdata files generated above
 # Output: many different plots
+# Additionally requires accuracy_of_unsupervised_method_6_0_2.Rdata
 source("ph_make_plots.R")
