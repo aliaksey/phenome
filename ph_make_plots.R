@@ -185,7 +185,7 @@ g8<-ggplot(statperfeat,aes(x=Average.correl.before)) +
 grid.arrange(g5,g6,g8,g7,nrow=2, ncol=2)
 
 ##plotting results of PCA
-load("PCA_results.RDATA")
+load("PCA_results2.RDATA")
 #make biplot
 # par(mfrow=c(2,2))
 # biplot(pca.results.all[[1]],var.axes = T, cex=0.2,arrow.len = 0,
@@ -226,7 +226,7 @@ pca.results.all[[3]]$rotation
 # plot(pca.results.all[[4]]$x[,1],pca.results.all[[4]]$x[,2])
 ##make plots of clusters in PCA
 par(mfrow=c(1,2))
-load("PCA_results.RDATA")
+load("PCA_results2.RDATA")
 load("Surface_clusters.Rdata")
 pca<-pca.results.all[[3]]
 pc<-c(1,2)
