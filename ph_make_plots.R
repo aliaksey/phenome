@@ -251,6 +251,7 @@ varimax(pca.results.gr[[3]]$rotation)
 pca<-pca.results.gr[[3]]
 pc<-c(1,2)
 plot(pca.results.gr[[3]]$x[,1],pca.results.gr[[3]]$x[,2],
+load("Cell all data & ground truth scaled.RData")
      col = as.numeric(grnd.truth.feat.scale[[3]]$Class),
      xlab=paste0("PC ", pc[1], " (", round(pca$sdev[pc[1]]^2/sum(pca$sdev^2)*100,0), "%)"),
      ylab=paste0("PC ", pc[2], " (",round(pca$sdev[pc[2]]^2/sum(pca$sdev^2)*100,0), "%)"))
