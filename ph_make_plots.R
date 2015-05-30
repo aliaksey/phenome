@@ -185,7 +185,7 @@ g8<-ggplot(statperfeat,aes(x=Average.correl.before)) +
 grid.arrange(g5,g6,g8,g7,nrow=2, ncol=2)
 
 ##plotting results of PCA
-load("PCA_results.RDATA")
+load("PCA_results2.RDATA")
 #make biplot
 # par(mfrow=c(2,2))
 # biplot(pca.results.all[[1]],var.axes = T, cex=0.2,arrow.len = 0,
@@ -226,7 +226,7 @@ pca.results.all[[3]]$rotation
 # plot(pca.results.all[[4]]$x[,1],pca.results.all[[4]]$x[,2])
 ##make plots of clusters in PCA
 par(mfrow=c(1,2))
-load("PCA_results.RDATA")
+load("PCA_results2.RDATA")
 load("Surface_clusters.Rdata")
 pca<-pca.results.all[[3]]
 pc<-c(1,2)
@@ -246,11 +246,12 @@ plot(pca.results.all[[3]]$x[,1],pca.results.all[[3]]$x[,2],
      col = for_col_pca.m$Cluster,pch=20)
 par(mfrow=c(1,1))
 #for ground trut
-plot(pca.results.gr[[3]])
-varimax(pca.results.gr[[3]]$rotation)
-pca<-pca.results.gr[[3]]
+plot(pca.results.gr$SurfSimpl)
+varimax(pca.results.gr$SurfSimpl$rotation)
+pca<-pca.results.gr$SurfSimpl
 pc<-c(1,2)
-plot(pca.results.gr[[3]]$x[,1],pca.results.gr[[3]]$x[,2],
+load("Cell all data & ground truth scaled.RData")
+plot(pca.results.gr$SurfSimpl$x[,1],pca.results.gr$SurfSimpl$x[,2],
      col = as.numeric(grnd.truth.feat.scale[[3]]$Class),
      xlab=paste0("PC ", pc[1], " (", round(pca$sdev[pc[1]]^2/sum(pca$sdev^2)*100,0), "%)"),
      ylab=paste0("PC ", pc[2], " (",round(pca$sdev[pc[2]]^2/sum(pca$sdev^2)*100,0), "%)"))
@@ -283,18 +284,18 @@ plot(pca.results.gr[[3]]$x[,1],pca.results.gr[[3]]$x[,2],
 # ##make the same plots for ground truth data
 # par(mfrow=c(2,2))
 # biplot(pca.results.gr[[1]],var.axes = T, cex=0.2,arrow.len = 0,
-#        xlabs=rep("O", nrow(pca.results.gr[[3]]$x)))
+#        xlabs=rep("O", nrow(pca.results.gr$SurfSimpl$x)))
 # biplot(pca.results.gr[[2]],var.axes = T, cex=0.2,arrow.len = 0,
-#        xlabs=rep("O", nrow(pca.results.gr[[3]]$x)))
-# biplot(pca.results.gr[[3]],var.axes = T, cex=0.2,arrow.len = 0,
-#        xlabs=rep("O", nrow(pca.results.gr[[3]]$x)))
+#        xlabs=rep("O", nrow(pca.results.gr$SurfSimpl$x)))
+# biplot(pca.results.gr$SurfSimpl,var.axes = T, cex=0.2,arrow.len = 0,
+#        xlabs=rep("O", nrow(pca.results.gr$SurfSimpl$x)))
 # biplot(pca.results.gr[[4]],var.axes = T, cex=0.2,arrow.len = 0,
-#        xlabs=rep("O", nrow(pca.results.gr[[3]]$x)))
+#        xlabs=rep("O", nrow(pca.results.gr$SurfSimpl$x)))
 # par(mfrow=c(2,2))
 # #make var per pc plot
 # plot(pca.results.gr[[1]])
 # plot(pca.results.gr[[2]])
-# plot(pca.results.gr[[3]])
+# plot(pca.results.gr$SurfSimpl)
 # plot(pca.results.gr[[4]])
 # 
 # #plotting scores
@@ -302,7 +303,7 @@ plot(pca.results.gr[[3]]$x[,1],pca.results.gr[[3]]$x[,2],
 #      col = as.numeric(grnd.truth.feat.scale[[3]]$Class))
 # plot(pca.results.gr[[2]]$x[,1],pca.results.gr[[2]]$x[,2],
 #      col = as.numeric(grnd.truth.feat.scale[[3]]$Class))
-# plot(pca.results.gr[[3]]$x[,1],pca.results.gr[[3]]$x[,2],
+# plot(pca.results.gr$SurfSimpl$x[,1],pca.results.gr$SurfSimpl$x[,2],
 #      col = as.numeric(grnd.truth.feat.scale[[3]]$Class))
 # plot(pca.results.gr[[4]]$x[,1],pca.results.gr[[4]]$x[,2],
 #      col = as.numeric(grnd.truth.feat.scale[[3]]$Class))
