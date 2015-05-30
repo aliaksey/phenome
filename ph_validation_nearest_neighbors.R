@@ -2,6 +2,8 @@ ph_validation_neighbors(" spearman p=0.7 all simple nearest neighbor by correlat
 
 ph_validation_neighbors("final 26.02.15   28  based on raw scores",clust.6medoids)
 
+ph_validation_neighbors("7 nearest neighbors fo rplot",clust.6medoids)
+
 all=data.frame(Cluster=seq(1:2177),FeatureIdx=seq(1:2177))
 ph_validation_neighbors("all data",all)
 extrmn<-data.frame(FeatureIdx=c(1068,534,1307,1433,1241,2105,687,1530,1670,719,329,1641,2114,203,798,714,1759,541,1149,1087,495,
