@@ -1,0 +1,114 @@
+---
+title: "actinALP"
+output: html_notebook
+---
+
+
+```{r, message=FALSE}
+library(magrittr)
+library(stringr)
+library(tidyverse)
+```
+
+## Load per-cell data
+
+```{r}
+load("ph_raw_data.RData")
+
+object <- cell.ftrs
+
+image <- image.data
+
+rm(list = c("cell.ftrs", "image.data"))
+```
+
+
+```{r}
+
+object %<>%
+  inner_join(image %>% select(ImageNumber, FeatureIdx)) %>%
+  ungroup()
+
+```
+
+
+## Predict  Actin total intensity given Actin standard deviation
+
+For each surface, fit a linear model to predict total intensity of actin given the actin standard deviation, and plot the density of R^2 values, measured across all the surfaces.
+
+```{r}
+object %>%
+  split(.$FeatureIdx) %>%
+  map(~ lm(Cells_Intensity_IntegratedIntensity_Actin4Corr ~ Cells_Intensity_StdIntensity_Actin4Corr, data = .)) %>%
+  map(summary) %>%
+  map_df("adj.r.squared") %>%
+  gather(FeatureIdx, actin_total_v_sd) %>% 
+  ggplot(aes(actin_total_v_sd)) + 
+  stat_density(adjust = 0.8, alpha = 0.5) + 
+  xlab("Adjusted R^2 of prediction Actin total intensity given Actin standard deviation")
+
+```
+
+
+## Predict  Actin total intensity given cell shape 
+
+For each surface, fit a linear model to predict total intensity of actin given the cell shape features, and plot the density of R^2 values, measured across all the surfaces.
+
+```{r}
+object %>%
+  split(.$FeatureIdx) %>%
+  map(~ lm(Cells_Intensity_IntegratedIntensity_Actin4Corr ~ 
+             Cells_AreaShape_Area +
+             Cells_AreaShape_Center_X +
+             Cells_AreaShape_Center_Y +
+             Cells_AreaShape_Compactness +
+             Cells_AreaShape_Eccentricity +
+             Cells_AreaShape_EulerNumber +
+             Cells_AreaShape_Extent +
+             Cells_AreaShape_FormFactor +
+             Cells_AreaShape_MajorAxisLength +
+             Cells_AreaShape_MinorAxisLength +
+             Cells_AreaShape_Orientation +
+             Cells_AreaShape_Perimeter +
+             Cells_AreaShape_Solidity +
+             Cells_AreaShape_Zernike_0_0 +
+             Cells_AreaShape_Zernike_1_1 +
+             Cells_AreaShape_Zernike_2_0 +
+             Cells_AreaShape_Zernike_2_2 +
+             Cells_AreaShape_Zernike_3_1 +
+             Cells_AreaShape_Zernike_3_3 +
+             Cells_AreaShape_Zernike_4_0 +
+             Cells_AreaShape_Zernike_4_2 +
+             Cells_AreaShape_Zernike_4_4 +
+             Cells_AreaShape_Zernike_5_1 +
+             Cells_AreaShape_Zernike_5_3 +
+             Cells_AreaShape_Zernike_5_5 +
+             Cells_AreaShape_Zernike_6_0 +
+             Cells_AreaShape_Zernike_6_2 +
+             Cells_AreaShape_Zernike_6_4 +
+             Cells_AreaShape_Zernike_6_6 +
+             Cells_AreaShape_Zernike_7_1 +
+             Cells_AreaShape_Zernike_7_3 +
+             Cells_AreaShape_Zernike_7_5 +
+             Cells_AreaShape_Zernike_7_7 +
+             Cells_AreaShape_Zernike_8_0 +
+             Cells_AreaShape_Zernike_8_2 +
+             Cells_AreaShape_Zernike_8_4 +
+             Cells_AreaShape_Zernike_8_6 +
+             Cells_AreaShape_Zernike_8_8 +
+             Cells_AreaShape_Zernike_9_1 +
+             Cells_AreaShape_Zernike_9_3 +
+             Cells_AreaShape_Zernike_9_5 +
+             Cells_AreaShape_Zernike_9_7 +
+             Cells_AreaShape_Zernike_9_9, 
+           data = .)) %>%
+  map(summary) %>%
+  map_df("adj.r.squared") %>%
+  gather(FeatureIdx, actin_total_v_sd) %>% 
+  ggplot(aes(actin_total_v_sd)) + 
+  stat_density(adjust = 0.8, alpha = 0.5) + 
+  xlab("Adjusted R^2 of prediction Actin total intensity given cell shape")
+
+
+```
+
