@@ -37,15 +37,18 @@ object %<>%
 For each surface, fit a linear model to predict total intensity of actin given the actin standard deviation, and plot the density of R^2 values, measured across all the surfaces.
 
 ```{r}
-object %>%
+actin_sd <-
+  object %>%
   split(.$FeatureIdx) %>%
   map(~ lm(Cells_Intensity_IntegratedIntensity_Actin4Corr ~ Cells_Intensity_StdIntensity_Actin4Corr, data = .)) %>%
   map(summary) %>%
   map_df("adj.r.squared") %>%
-  gather(FeatureIdx, actin_total_v_sd) %>% 
-  ggplot(aes(actin_total_v_sd)) + 
+  gather(FeatureIdx, value)
+  
+ggplot(actin_sd, aes(value)) + 
   stat_density(adjust = 0.8, alpha = 0.5) + 
-  xlab("Adjusted R^2 of prediction Actin total intensity given Actin standard deviation")
+  xlab("Adjusted R^2 of prediction Actin total intensity given Actin standard deviation") + 
+  xlim(-1, 1)
 
 ```
 
@@ -55,7 +58,8 @@ object %>%
 For each surface, fit a linear model to predict total intensity of actin given the cell shape features, and plot the density of R^2 values, measured across all the surfaces.
 
 ```{r}
-object %>%
+shape_area <- 
+  object %>%
   split(.$FeatureIdx) %>%
   map(~ lm(Cells_Intensity_IntegratedIntensity_Actin4Corr ~ 
              Cells_AreaShape_Area +
@@ -104,11 +108,81 @@ object %>%
            data = .)) %>%
   map(summary) %>%
   map_df("adj.r.squared") %>%
-  gather(FeatureIdx, actin_total_v_sd) %>% 
-  ggplot(aes(actin_total_v_sd)) + 
+  gather(FeatureIdx, value)
+
+ggplot(shape_area, aes(value)) + 
   stat_density(adjust = 0.8, alpha = 0.5) + 
-  xlab("Adjusted R^2 of prediction Actin total intensity given cell shape")
+  xlab("Adjusted R^2 of prediction Actin total intensity given cell shape") + 
+  xlim(-1, 1)
 
 
+```
+
+
+Do the same thing as above but exclude any features that are indicative of size
+
+```{r}
+
+shape <- 
+  object %>%
+  split(.$FeatureIdx) %>%
+  map(~ lm(Cells_Intensity_IntegratedIntensity_Actin4Corr ~ 
+             Cells_AreaShape_Compactness +
+             Cells_AreaShape_Eccentricity +
+             Cells_AreaShape_EulerNumber +
+             Cells_AreaShape_FormFactor +
+             Cells_AreaShape_Orientation +
+             Cells_AreaShape_Solidity +
+             Cells_AreaShape_Zernike_1_1 +
+             Cells_AreaShape_Zernike_2_0 +
+             Cells_AreaShape_Zernike_2_2 +
+             Cells_AreaShape_Zernike_3_1 +
+             Cells_AreaShape_Zernike_3_3 +
+             Cells_AreaShape_Zernike_4_0 +
+             Cells_AreaShape_Zernike_4_2 +
+             Cells_AreaShape_Zernike_4_4 +
+             Cells_AreaShape_Zernike_5_1 +
+             Cells_AreaShape_Zernike_5_3 +
+             Cells_AreaShape_Zernike_5_5 +
+             Cells_AreaShape_Zernike_6_0 +
+             Cells_AreaShape_Zernike_6_2 +
+             Cells_AreaShape_Zernike_6_4 +
+             Cells_AreaShape_Zernike_6_6 +
+             Cells_AreaShape_Zernike_7_1 +
+             Cells_AreaShape_Zernike_7_3 +
+             Cells_AreaShape_Zernike_7_5 +
+             Cells_AreaShape_Zernike_7_7 +
+             Cells_AreaShape_Zernike_8_0 +
+             Cells_AreaShape_Zernike_8_2 +
+             Cells_AreaShape_Zernike_8_4 +
+             Cells_AreaShape_Zernike_8_6 +
+             Cells_AreaShape_Zernike_8_8 +
+             Cells_AreaShape_Zernike_9_1 +
+             Cells_AreaShape_Zernike_9_3 +
+             Cells_AreaShape_Zernike_9_5 +
+             Cells_AreaShape_Zernike_9_7 +
+             Cells_AreaShape_Zernike_9_9, 
+           data = .)) %>%
+  map(summary) %>%
+  map_df("adj.r.squared") %>%
+  gather(FeatureIdx, value)
+
+ggplot(shape, aes(value)) + 
+  stat_density(adjust = 0.8, alpha = 0.5) + 
+  xlab("Adjusted R^2 of prediction Actin total intensity given cell shape excluding size") + 
+  xlim(-1, 1)
+```
+
+
+Plot shape and actin s.d. together
+```{r}
+
+inner_join(shape %>% rename(shape = value), 
+           actin_sd %>% rename(actin_sd = value)) %>%
+  gather(predictor, value, -FeatureIdx) %>%
+  ggplot(aes(value, fill = predictor)) + 
+  stat_density(adjust = 0.8, alpha = 0.3) + 
+  xlab("Adjusted R^2 of prediction Actin total intensity given a predictor") + 
+  xlim(-1, 1)
 ```
 
